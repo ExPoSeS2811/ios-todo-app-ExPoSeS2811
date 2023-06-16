@@ -13,6 +13,7 @@
 		706E17722A3C7C56007A77B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 706E17702A3C7C56007A77B3 /* Main.storyboard */; };
 		706E17742A3C7C58007A77B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 706E17732A3C7C58007A77B3 /* Assets.xcassets */; };
 		706E17772A3C7C58007A77B3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 706E17752A3C7C58007A77B3 /* LaunchScreen.storyboard */; };
+		706E177F2A3C7D3B007A77B3 /* TodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E177E2A3C7D3B007A77B3 /* TodoItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		706E17732A3C7C58007A77B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		706E17762A3C7C58007A77B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		706E17782A3C7C58007A77B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		706E177E2A3C7D3B007A77B3 /* TodoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				706E176A2A3C7C56007A77B3 /* AppDelegate.swift */,
 				706E176C2A3C7C56007A77B3 /* SceneDelegate.swift */,
 				706E176E2A3C7C56007A77B3 /* ViewController.swift */,
+				706E177E2A3C7D3B007A77B3 /* TodoItem.swift */,
 				706E17702A3C7C56007A77B3 /* Main.storyboard */,
 				706E17732A3C7C58007A77B3 /* Assets.xcassets */,
 				706E17752A3C7C58007A77B3 /* LaunchScreen.storyboard */,
@@ -140,6 +143,7 @@
 			files = (
 				706E176F2A3C7C56007A77B3 /* ViewController.swift in Sources */,
 				706E176B2A3C7C56007A77B3 /* AppDelegate.swift in Sources */,
+				706E177F2A3C7D3B007A77B3 /* TodoItem.swift in Sources */,
 				706E176D2A3C7C56007A77B3 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
