@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Importance: String {
+enum Importance: String, CaseIterable {
     case low, normal, high
 }
 
@@ -19,6 +19,7 @@ struct TodoItem {
     let isDone: Bool
     let createdAt: Date
     let changedAt: Date?
+    let textColor: String?
     
     init(
         id: String = UUID().uuidString,
@@ -27,7 +28,8 @@ struct TodoItem {
         deadline: Date? = nil,
         isDone: Bool = false,
         createdAt: Date = Date(),
-        changedAt: Date? = nil
+        changedAt: Date? = nil,
+        textColor: String? = nil
     ) {
         self.id = id
         self.text = text
@@ -36,6 +38,7 @@ struct TodoItem {
         self.isDone = isDone
         self.createdAt = createdAt
         self.changedAt = changedAt
+        self.textColor = textColor
     }
 }
 
@@ -51,6 +54,7 @@ extension TodoItem {
         let deadline = (jsn["deadline"] as? Int).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
         let isDone = jsn["isDone"] as? Bool ?? false
         let changedAt = (jsn["changedAt"] as? Int).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
+        let textColor = jsn["textColor"] as? String
         
         return TodoItem(
             id: id,
@@ -59,7 +63,8 @@ extension TodoItem {
             deadline: deadline,
             isDone: isDone,
             createdAt: createdAt,
-            changedAt: changedAt
+            changedAt: changedAt,
+            textColor: textColor
         )
     }
     
@@ -79,6 +84,9 @@ extension TodoItem {
         if let changedAt = changedAt {
             res["changedAt"] = Int(changedAt.timeIntervalSince1970)
         }
+        if let textColor = textColor {
+            res["textColor"] = textColor
+        }
         
         return res
     }
@@ -97,6 +105,7 @@ extension TodoItem {
         let deadline = Int(columns[3]).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
         let isDone = Bool(columns[4]) ?? false
         let changedAt = Int(columns[6]).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
+        let textColor = columns[7]
         
         return TodoItem(
             id: id,
@@ -105,7 +114,8 @@ extension TodoItem {
             deadline: deadline,
             isDone: isDone,
             createdAt: createdAt,
-            changedAt: changedAt
+            changedAt: changedAt,
+            textColor: textColor
         )
     }
     
@@ -114,7 +124,8 @@ extension TodoItem {
         let changedAtString = changedAt.flatMap { String(Int($0.timeIntervalSince1970)) } ?? ""
         let createdAtString = String(Int(createdAt.timeIntervalSince1970))
         let importanceString = importance != .normal ? importance.rawValue : ""
+        let textColorString = textColor != nil ? textColor! : ""
         
-        return "\(id);\(text);\(importanceString);\(deadlineString);\(isDone);\(createdAtString);\(changedAtString)"
+        return "\(id);\(text);\(importanceString);\(deadlineString);\(isDone);\(createdAtString);\(changedAtString);\(textColorString)"
     }
 }

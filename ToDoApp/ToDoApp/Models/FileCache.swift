@@ -13,7 +13,7 @@ enum FileCacheErrors: Error {
 }
 
 final class FileCache {
-    private(set) var tasks: [String: TodoItem] = [:]
+    var tasks: [String: TodoItem] = [:]
     
     private let csv = ".csv"
     private let json = ".json"
@@ -55,7 +55,7 @@ final class FileCache {
     }
     
     func saveCSV(to file: String) throws {
-        let csvHeader = "id;text;importance;deadline;isDone;createdAt;changedAt"
+        let csvHeader = "id;text;importance;deadline;isDone;createdAt;changedAt;textColor"
 
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             throw FileCacheErrors.systemDirectoryNotFound
@@ -73,8 +73,7 @@ final class FileCache {
 
         let fileURL = documentsDirectory.appendingPathComponent("\(file)\(csv)")
         let data = try String(contentsOf: fileURL, encoding: .utf8)
-        var rows = data.components(separatedBy: "\n")
-        rows.removeFirst()
+        let rows = data.components(separatedBy: "\n")
         
         for row in rows {
             if let task = TodoItem.parse(csv: row) {
