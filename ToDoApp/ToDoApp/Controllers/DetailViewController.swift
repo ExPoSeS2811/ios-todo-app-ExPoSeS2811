@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class DetailViewController: UIViewController {
     // MARK: - GUI variables
 
     lazy var scrollView: UIScrollView = {
@@ -240,11 +240,20 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .primaryBack
         setupUI()
+        updateSettingsForCurrentTheme()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadDataFromFile()
+    }
+    
+    // MARK: Methods
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        // Update label text when the theme changes
+        updateSettingsForCurrentTheme()
     }
     
     // MARK: Private methods
@@ -348,7 +357,6 @@ class ViewController: UIViewController {
             deleteButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -edgesSize)
         ])
     }
-    
     
     private func configureDate(with date: Date) -> String {
         let dateFormatter = DateFormatter()
@@ -462,6 +470,13 @@ class ViewController: UIViewController {
         return dateFormatter.date(from: dateString)
     }
     
+    private func updateSettingsForCurrentTheme() {
+        if textView.text != "Что надо сделать?" && textView.textColor != .tertiaryLabel {
+            hexLabel.text = colorResult.backgroundColor?.toHex()
+            textView.textColor = colorResult.backgroundColor
+        }
+    }
+    
     @objc private func cancelAction() {
         print("Cancel") // TODO: make pop to root vc or dismiss
     }
@@ -498,6 +513,7 @@ class ViewController: UIViewController {
         if !sender.isOn {
             guard let date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) else { return }
             dateButton.setTitle(configureDate(with: date), for: .normal)
+            calendarPicker.date = date
             if !calendarPicker.isHidden {
                 animateCalendarDisappereance()
             }
@@ -571,7 +587,7 @@ class ViewController: UIViewController {
 
 // MARK: - UITextViewDelegate
 
-extension ViewController: UITextViewDelegate {
+extension DetailViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         resizeIfNeeded()
         isModified = !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -594,7 +610,7 @@ extension ViewController: UITextViewDelegate {
     }
 }
 
-extension ViewController: ColorPickerDelegate {
+extension DetailViewController: ColorPickerDelegate {
     func colorPicker(_ view: ColorPicker, didSelect color: UIColor) {
         guard color != UIColor(red: 0, green: 0, blue: 0, alpha: 0) else { return }
         colorResult.backgroundColor = color.withBrightness(CGFloat(sliderBrightness.value))

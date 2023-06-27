@@ -19,7 +19,7 @@ class DescriptionTextView: UITextView {
         font = .body
         adjustsFontForContentSizeCategory = true
         textColor = .tertiaryLabel
-            textContainerInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        textContainerInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
     }
     
     required init?(coder: NSCoder) {
