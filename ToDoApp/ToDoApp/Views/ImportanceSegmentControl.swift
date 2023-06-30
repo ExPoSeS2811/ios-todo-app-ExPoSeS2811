@@ -13,7 +13,7 @@ class ImportanceSegmentControl: UISegmentedControl {
         
         insertSegment(with: .low, at: 0, animated: true)
         insertSegment(withTitle: "нет", at: 1, animated: true)
-        insertSegment(with: .important, at: 2, animated: true)
+        insertSegment(with: .high, at: 2, animated: true)
         selectedSegmentIndex = 1
         
         let titleAttributes: [NSAttributedString.Key: Any] = [

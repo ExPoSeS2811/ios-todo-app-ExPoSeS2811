@@ -9,15 +9,15 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
-    
+    private let fileCache = FileCache()
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         if let window = window {
             let navigationController = UINavigationController()
-            navigationController.viewControllers = [DetailViewController()]
+            navigationController.viewControllers = [HomeViewController(fileCache: fileCache)]
             window.rootViewController = navigationController
             window.makeKeyAndVisible()
         }
@@ -25,4 +25,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 }
-

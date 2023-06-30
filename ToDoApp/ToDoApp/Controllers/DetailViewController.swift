@@ -6,15 +6,14 @@
 //
 
 import UIKit
-
 class DetailViewController: UIViewController {
     // MARK: - GUI variables
 
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         
-        scrollView.contentSize = view.bounds.size
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.contentSize = view.bounds.size
         
         return scrollView
     }()
@@ -208,6 +207,7 @@ class DetailViewController: UIViewController {
         let button = DeleteButton()
         
         button.addTarget(self, action: #selector(deleteAction), for: .touchUpInside)
+        button.isEnabled = textView.text != "Что надо сделать?" && textView.textColor != .tertiaryLabel && !textView.text.isEmpty
         
         return button
     }()
@@ -222,7 +222,6 @@ class DetailViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let fileStorage = FileCache()
     private let importanceValues = Importance.allCases
     private let edgesSize: CGFloat = 16
     private var isModified = false {
@@ -233,6 +232,8 @@ class DetailViewController: UIViewController {
     
     private var savedText = ""
     private var currentTaskId = ""
+    private var currentItem: TodoItem?
+    var completionHandler: ((TodoItem?) -> Void)?
     
     // MARK: - Life cycle
 
@@ -241,11 +242,18 @@ class DetailViewController: UIViewController {
         view.backgroundColor = .primaryBack
         setupUI()
         updateSettingsForCurrentTheme()
+        updateLayoutForOrientationChange()
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        loadDataFromFile()
+    
+    init(currentItem: TodoItem?) {
+        self.currentItem = currentItem
+        super.init(nibName: nil, bundle: nil)
+        setupDataFromItem(item: currentItem)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: Methods
@@ -277,14 +285,16 @@ class DetailViewController: UIViewController {
         view.addGestureRecognizer(recognizer)
     }
     
-    private func setupConstraints() {
-        scrollViewConstraints()
-        textViewConstraints()
-        storedStackViewConstraints()
-        deleteButtonConstraints()
-        [firstLine, thirdLine, secondLine].forEach { $0.heightAnchor.constraint(equalToConstant: 1).isActive = true }
-        colorResultConstraint()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateKeyboardLayoutGuideConstraint()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeKeyboardLayoutGuideConstraint()
+    }
+    
     
     private func setupNavigationBar() {
         self.title = "Дело"
@@ -312,25 +322,68 @@ class DetailViewController: UIViewController {
         navigationItem.rightBarButtonItem = saveButton
     }
     
+    private func setupConstraints() {
+        scrollViewConstraints()
+        textViewConstraints()
+        storedStackViewConstraints()
+        deleteButtonConstraints()
+        [firstLine, thirdLine, secondLine].forEach { $0.heightAnchor.constraint(equalToConstant: 1).isActive = true }
+        colorResultConstraint()
+    }
+    
+    private var textViewBottomConstraint: NSLayoutConstraint?
+    private var scrollViewBottomConstraint: NSLayoutConstraint?
+
+    
     private func scrollViewConstraints() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        let bottomConstraint = scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
+        scrollViewBottomConstraint = bottomConstraint
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
+            bottomConstraint
         ])
     }
     
     private func textViewConstraints() {
+        let bottomConstraint: NSLayoutConstraint = textView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
+        
+        textViewBottomConstraint = bottomConstraint
+
         textView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: edgesSize),
             textView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: edgesSize),
             textView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -edgesSize),
             textView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -2 * edgesSize),
-            textView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
+            bottomConstraint
         ])
+    }
+    
+    private func removeKeyboardLayoutGuideConstraint() {
+        scrollViewBottomConstraint?.isActive = false
+        scrollViewBottomConstraint = scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        scrollViewBottomConstraint?.isActive = true
+    }
+    
+    private func updateKeyboardLayoutGuideConstraint() {
+        scrollViewBottomConstraint?.isActive = false
+        scrollViewBottomConstraint = scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
+        scrollViewBottomConstraint?.isActive = true
+    }
+    
+    private func removeTextViewConstraint() {
+        textViewBottomConstraint?.isActive = false
+        textViewBottomConstraint = textView.heightAnchor.constraint(equalToConstant: view.bounds.height)
+        textViewBottomConstraint?.isActive = true
+    }
+    
+    private func updateTextViewConstraint() {
+        textViewBottomConstraint?.isActive = false
+        textViewBottomConstraint = textView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
+        textViewBottomConstraint?.isActive = true
     }
     
     private func storedStackViewConstraints() {
@@ -358,6 +411,13 @@ class DetailViewController: UIViewController {
         ])
     }
     
+    @objc private func cancelAction() {
+        removeKeyboardLayoutGuideConstraint()
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true)
+    }
+
+    
     private func configureDate(with date: Date) -> String {
         let dateFormatter = DateFormatter()
         
@@ -367,25 +427,6 @@ class DetailViewController: UIViewController {
         dateFormatter.locale = Locale(identifier: "ru_RU")
         
         return dateFormatter.string(from: date)
-    }
-    
-    private func loadDataFromFile() {
-        do {
-            try fileStorage.loadJSON(from: "strorage_json")
-            setupDataFromItem(item: fileStorage.tasks.first?.value)
-            if !fileStorage.tasks.isEmpty {
-                deleteButton.isEnabled = true
-            }
-        } catch {
-            switch error {
-            case FileCacheErrors.systemDirectoryNotFound:
-                print("Directory not found")
-            case FileCacheErrors.parsingError:
-                print("Incorrect format for parsing")
-            default:
-                print("File is empty, can you save it?")
-            }
-        }
     }
     
     private func setupDataFromItem(item: TodoItem?) {
@@ -437,6 +478,12 @@ class DetailViewController: UIViewController {
         }
     }
     
+    func disableInteracted() {
+            self.deleteButton.isHidden = true
+            self.saveButton.isHidden = true
+
+    }
+    
     private func animateCalendarAppereance() {
         UIView.animate(withDuration: 0.3) {
             self.visibilitySetting(isDateHidden: self.dateButton.isHidden, isCalendarHidden: false)
@@ -477,31 +524,19 @@ class DetailViewController: UIViewController {
         }
     }
     
-    @objc private func cancelAction() {
-        print("Cancel") // TODO: make pop to root vc or dismiss
-    }
-    
     @objc private func saveAction() {
         let importance = getImportance(by: importanceSegmentedControl.selectedSegmentIndex)
-        let deadlineDate = convertStringToDate(dateButton.titleLabel?.text ?? "")
-        let item = TodoItem(text: textView.text, importance: importance, deadline: deadlineDate, textColor: hexLabel.text)
-        fileStorage.tasks.removeAll() // for imitation that it's current file
-        fileStorage.add(newTask: item)
-        do {
-            try fileStorage.saveJSON(to: "strorage_json")
-            savedText = item.text
-            isModified = savedText != textView.text
-            deleteButton.isEnabled = true
+        let deadlineDate = deadlineSwitch.isOn ? convertStringToDate(dateButton.titleLabel?.text ?? "") : nil
+        if currentItem != nil {
+            currentItem = TodoItem(id: currentItem!.id, text: textView.text, importance: importance, deadline: deadlineDate, isDone: currentItem!.isDone, createdAt: currentItem!.createdAt, changedAt: Date(), textColor: hexLabel.text)
+        } else {
+            currentItem = TodoItem(text: textView.text, importance: importance, deadline: deadlineDate, textColor: hexLabel.text)
+        }
+        removeKeyboardLayoutGuideConstraint()
 
-        } catch {
-            switch error {
-            case FileCacheErrors.systemDirectoryNotFound:
-                print("Directory not found")
-            case FileCacheErrors.parsingError:
-                print("Incorrect format for parsing")
-            default:
-                print("An unknown error occurred: \(error)")
-            }
+        self.dismiss(animated: true)
+        if let completion = completionHandler {
+            completion(currentItem)
         }
     }
     
@@ -533,37 +568,12 @@ class DetailViewController: UIViewController {
     }
     
     @objc func deleteAction() {
-        fileStorage.remove(currentTaskId)
-        textView.text = " "
-        importanceSegmentedControl.selectedSegmentIndex = 1
-        deadlineSwitch.isOn = false
-        dateButton.isHidden = true
-        let date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
-        dateButton.setTitle(configureDate(with: date), for: .normal)
-        calendarPicker.isHidden = true
-        calendarPicker.date = date
-        animateCalendarDisappereance()
-        textView.text = "Что надо сделать?"
-        textView.textColor = .tertiaryLabel
-        colorResult.backgroundColor = .primaryLabel
-        hexLabel.text = colorResult.backgroundColor?.toHex()
-        sliderBrightness.value = Float(colorResult.backgroundColor?.brightness ?? 1)
-        savedText = ""
-        
-        do {
-            try fileStorage.saveJSON(to: "strorage_json")
-        } catch {
-            switch error {
-            case FileCacheErrors.systemDirectoryNotFound:
-                print("Directory not found")
-            case FileCacheErrors.parsingError:
-                print("Incorrect format for parsing")
-            default:
-                print("An unknown error occurred: \(error)")
-            }
+        currentItem = nil
+        if let completion = completionHandler {
+            completion(currentItem)
         }
-        
-        deleteButton.isEnabled = false
+        removeKeyboardLayoutGuideConstraint()
+        self.dismiss(animated: true)
     }
     
     @objc func setInvisibleColorPicker() {
@@ -619,5 +629,35 @@ extension DetailViewController: ColorPickerDelegate {
         }
         hexLabel.text = colorResult.backgroundColor?.toHex()
         isModified = !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && textView.text != "Что надо сделать?" && textView.textColor != .tertiaryLabel
+    }
+}
+
+extension DetailViewController {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            self?.updateLayoutForOrientationChange()
+        }, completion: nil)
+    }
+
+    private func updateLayoutForOrientationChange() {
+        if UIDevice.current.orientation.isLandscape && currentItem != nil {
+            hideControlsInLandscape()
+            removeTextViewConstraint()
+        } else {
+            showControlsInPortrait()
+            updateTextViewConstraint()
+        }
+    }
+    
+    private func hideControlsInLandscape() {
+        storedStackView.isHidden = true
+        deleteButton.isHidden = true
+    }
+    
+    private func showControlsInPortrait() {
+        storedStackView.isHidden = false
+        deleteButton.isHidden = false
     }
 }
