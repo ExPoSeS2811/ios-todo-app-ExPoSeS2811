@@ -38,12 +38,6 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    @objc private func toggleInvisibleCell() {
-        showCompletedTasks.toggle()
-        statusInvisibleTask.setTitle(!showCompletedTasks ? "Показать" : "Скрыть", for: .normal)
-        reloadCell()
-    }
-    
     lazy var tasksTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         
@@ -72,18 +66,6 @@ class HomeViewController: UIViewController {
     
         return button
     }()
-    
-    @objc func createNewItem() {
-        let vc = DetailViewController(currentItem: nil)
-        let navController = UINavigationController(rootViewController: vc)
-        present(navController, animated: true)
-        vc.completionHandler = { [self] item in
-            if let item = item {
-                tasks.append(item)
-                saveDataAndReloadCell()
-            }
-        }
-    }
     
     // MARK: Propertiesa
 
@@ -220,6 +202,25 @@ class HomeViewController: UIViewController {
         completedTasks.removeAll(where: { $0.id == tasks[index].id })
         tasks.remove(at: index)
     }
+    
+    @objc func createNewItem() {
+        let vc = DetailViewController(currentItem: nil)
+        let navController = UINavigationController(rootViewController: vc)
+        present(navController, animated: true)
+        vc.completionHandler = { [self] item in
+            if let item = item {
+                tasks.append(item)
+                saveDataAndReloadCell()
+            }
+        }
+    }
+
+    @objc private func toggleInvisibleCell() {
+        showCompletedTasks.toggle()
+        statusInvisibleTask.setTitle(!showCompletedTasks ? "Показать" : "Скрыть", for: .normal)
+        reloadCell()
+    }
+    
 }
 
 extension HomeViewController: UITableViewDelegate {

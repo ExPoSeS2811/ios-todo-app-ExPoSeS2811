@@ -33,11 +33,6 @@ class TaskTableViewCell: UITableViewCell {
         return button
     }()
     
-    @objc private func changeState(_ sender: UIButton) {
-        print("Tapped")
-        delegate?.didEditingStatusButton(source: sender)
-    }
-    
     lazy var innerStackView: UIStackView = {
         let stackView = UIStackView()
         
@@ -78,6 +73,7 @@ class TaskTableViewCell: UITableViewCell {
         
         label.text = "Задание"
         label.numberOfLines = 3
+        label.textColor = UIColor(named: "PrimaryLabel")
         
         return label
     }()
@@ -106,11 +102,12 @@ class TaskTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        separatorInset = UIEdgeInsets(top: 0, left: statusButton.frame.width + 16, bottom: 0, right: 0)
+        separatorInset = UIEdgeInsets(top: 0, left: statusButton.frame.width + 56, bottom: 0, right: 0) // (16 + 12) * 2
         contentView.isUserInteractionEnabled = true
         setupUI()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -153,7 +150,7 @@ class TaskTableViewCell: UITableViewCell {
             deadlineTaskStackView.isHidden = true
             deadlineLabel.text = ""
         }
-        
+
         if item.importance == .high || item.importance == .low {
             importanceImageView.image = item.importance.image
             importanceImageView.isHidden = false
@@ -170,7 +167,6 @@ class TaskTableViewCell: UITableViewCell {
                 descriptionTaskLabel.attributedText = attributedText
             }
         } else {
-            importanceImageView.image = nil
             if item.isDone {
                 statusButton.setImage(State.done.image, for: .normal)
                 let attributedText = NSAttributedString(string: item.text, attributes: [
@@ -183,7 +179,7 @@ class TaskTableViewCell: UITableViewCell {
                 descriptionTaskLabel.attributedText = attributedText
             }
         }
-        
+
         if let color = item.textColor {
             descriptionTaskLabel.textColor = UIColor.colorFromHex(color)
         }
@@ -198,6 +194,11 @@ class TaskTableViewCell: UITableViewCell {
         dateFormatter.locale = Locale(identifier: "ru_RU")
         
         return dateFormatter.string(from: date)
+    }
+    
+    @objc private func changeState(_ sender: UIButton) {
+        print("Tapped")
+        delegate?.didEditingStatusButton(source: sender)
     }
 }
 

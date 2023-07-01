@@ -234,6 +234,8 @@ class DetailViewController: UIViewController {
     private var currentTaskId = ""
     private var currentItem: TodoItem?
     var completionHandler: ((TodoItem?) -> Void)?
+    private var textViewBottomConstraint: NSLayoutConstraint?
+    private var scrollViewBottomConstraint: NSLayoutConstraint?
     
     // MARK: - Life cycle
 
@@ -295,7 +297,6 @@ class DetailViewController: UIViewController {
         removeKeyboardLayoutGuideConstraint()
     }
     
-    
     private func setupNavigationBar() {
         self.title = "Дело"
         
@@ -330,11 +331,7 @@ class DetailViewController: UIViewController {
         [firstLine, thirdLine, secondLine].forEach { $0.heightAnchor.constraint(equalToConstant: 1).isActive = true }
         colorResultConstraint()
     }
-    
-    private var textViewBottomConstraint: NSLayoutConstraint?
-    private var scrollViewBottomConstraint: NSLayoutConstraint?
 
-    
     private func scrollViewConstraints() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         let bottomConstraint = scrollView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
@@ -410,14 +407,7 @@ class DetailViewController: UIViewController {
             deleteButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -edgesSize)
         ])
     }
-    
-    @objc private func cancelAction() {
-        removeKeyboardLayoutGuideConstraint()
-        self.navigationController?.popViewController(animated: true)
-        self.dismiss(animated: true)
-    }
 
-    
     private func configureDate(with date: Date) -> String {
         let dateFormatter = DateFormatter()
         
@@ -479,9 +469,12 @@ class DetailViewController: UIViewController {
     }
     
     func disableInteracted() {
-            self.deleteButton.isHidden = true
-            self.saveButton.isHidden = true
-
+        self.deleteButton.isEnabled = false
+        self.saveButton.isEnabled = false
+        textView.isEditable = false
+        deadlineSwitch.isEnabled = false
+        colorResult.isEnabled = false
+        importanceSegmentedControl.isEnabled = false
     }
     
     private func animateCalendarAppereance() {
@@ -532,12 +525,13 @@ class DetailViewController: UIViewController {
         } else {
             currentItem = TodoItem(text: textView.text, importance: importance, deadline: deadlineDate, textColor: hexLabel.text)
         }
-        removeKeyboardLayoutGuideConstraint()
-
-        self.dismiss(animated: true)
+        
         if let completion = completionHandler {
             completion(currentItem)
         }
+        removeKeyboardLayoutGuideConstraint()
+
+        self.dismiss(animated: true)
     }
     
     @objc private func hideKeyboard() {
@@ -593,6 +587,12 @@ class DetailViewController: UIViewController {
         hexLabel.text = colorResult.backgroundColor?.toHex()
         isModified = !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && textView.text != "Что надо сделать?" && textView.textColor != .tertiaryLabel
     }
+    
+    @objc private func cancelAction() {
+        removeKeyboardLayoutGuideConstraint()
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true)
+    }
 }
 
 // MARK: - UITextViewDelegate
@@ -642,7 +642,7 @@ extension DetailViewController {
     }
 
     private func updateLayoutForOrientationChange() {
-        if UIDevice.current.orientation.isLandscape && currentItem != nil {
+        if UIDevice.current.orientation.isLandscape, currentItem != nil {
             hideControlsInLandscape()
             removeTextViewConstraint()
         } else {
