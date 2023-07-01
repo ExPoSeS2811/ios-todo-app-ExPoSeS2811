@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import MyLibrary
+
 class DetailViewController: UIViewController {
     // MARK: - GUI variables
 
