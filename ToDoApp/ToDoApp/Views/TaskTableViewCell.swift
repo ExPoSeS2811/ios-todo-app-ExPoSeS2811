@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MyLibrary
 
 protocol TaskTableViewCellDelegate {
     func didEditingStatusButton(source: UIButton)
@@ -151,7 +152,11 @@ class TaskTableViewCell: UITableViewCell {
         }
         
         if item.importance == .high || item.importance == .low {
-            importanceImageView.image = item.importance.image
+            if item.importance == .high {
+                importanceImageView.image = UIImage.high
+            } else {
+                importanceImageView.image = UIImage.low
+            }
             importanceImageView.isHidden = false
             if item.isDone {
                 statusButton.setImage(State.done.image, for: .normal)
