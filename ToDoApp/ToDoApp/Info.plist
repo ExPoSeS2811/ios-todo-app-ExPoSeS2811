@@ -5,9 +5,9 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>SF-Pro-Display-Bold.otf</string>
-		<string>SFProText-Semibold.ttf</string>
 		<string>SF-Pro-Display-Semibold.otf</string>
-		<string>SFProText-Regular.ttf</string>
+		<string>SF-Pro-Text-Semibold.otf</string>
+		<string>SF-Pro-Text-Regular.otf</string>
 	</array>
 </dict>
 </plist>
