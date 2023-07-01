@@ -20,6 +20,7 @@
 		706E177F2A3C7D3B007A77B3 /* TodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E177E2A3C7D3B007A77B3 /* TodoItem.swift */; };
 		706E17812A3C7E44007A77B3 /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E17802A3C7E44007A77B3 /* FileCache.swift */; };
 		706E17892A3C7EAE007A77B3 /* TodoItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E17882A3C7EAE007A77B3 /* TodoItemTests.swift */; };
+		707074042A4FBFF000478EF8 /* MyLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 707074032A4FBFF000478EF8 /* MyLibrary */; };
 		708135142A40FCE200A7D61C /* UIView+addSubviews().swift in Sources */ = {isa = PBXBuildFile; fileRef = 708135132A40FCE200A7D61C /* UIView+addSubviews().swift */; };
 		708135172A40FDD600A7D61C /* UIStackView+addArrangedSubviews().swift in Sources */ = {isa = PBXBuildFile; fileRef = 708135162A40FDD600A7D61C /* UIStackView+addArrangedSubviews().swift */; };
 		70A061292A44AF0F001603FF /* DeadlineDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A061282A44AF0F001603FF /* DeadlineDatePicker.swift */; };
@@ -30,7 +31,6 @@
 		70D24ABE2A4FB12700A760B1 /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 70D24ABD2A4FB12700A760B1 /* CocoaLumberjack */; };
 		70D24AC02A4FB12700A760B1 /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 70D24ABF2A4FB12700A760B1 /* CocoaLumberjackSwift */; };
 		70D24AC22A4FB12700A760B1 /* CocoaLumberjackSwiftLogBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 70D24AC12A4FB12700A760B1 /* CocoaLumberjackSwiftLogBackend */; };
-		70D24AEE2A4FBDD100A760B1 /* MyLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 70D24AED2A4FBDD100A760B1 /* MyLibrary */; };
 		70E705132A4E07450011C2C5 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E705122A4E07450011C2C5 /* Animation.swift */; };
 		70EE49F02A46A132008B6247 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 70EE49EF2A46A132008B6247 /* SF-Pro-Display-Bold.otf */; };
 		70EE49F22A46A170008B6247 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 70EE49F12A46A170008B6247 /* SF-Pro-Display-Semibold.otf */; };
@@ -86,7 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70D24AEE2A4FBDD100A760B1 /* MyLibrary in Frameworks */,
+				707074042A4FBFF000478EF8 /* MyLibrary in Frameworks */,
 				70D24AC02A4FB12700A760B1 /* CocoaLumberjackSwift in Frameworks */,
 				70D24AC22A4FB12700A760B1 /* CocoaLumberjackSwiftLogBackend in Frameworks */,
 				70D24ABE2A4FB12700A760B1 /* CocoaLumberjack in Frameworks */,
@@ -230,7 +230,7 @@
 				70D24ABD2A4FB12700A760B1 /* CocoaLumberjack */,
 				70D24ABF2A4FB12700A760B1 /* CocoaLumberjackSwift */,
 				70D24AC12A4FB12700A760B1 /* CocoaLumberjackSwiftLogBackend */,
-				70D24AED2A4FBDD100A760B1 /* MyLibrary */,
+				707074032A4FBFF000478EF8 /* MyLibrary */,
 			);
 			productName = ToDoApp;
 			productReference = 706E17672A3C7C56007A77B3 /* ToDoApp.app */;
@@ -284,7 +284,7 @@
 			mainGroup = 706E175E2A3C7C56007A77B3;
 			packageReferences = (
 				70D24ABC2A4FB12700A760B1 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */,
-				70D24AEC2A4FBDD000A760B1 /* XCRemoteSwiftPackageReference "TodoItem-Package" */,
+				707074022A4FBFF000478EF8 /* XCRemoteSwiftPackageReference "TodoItem-Package-2" */,
 			);
 			productRefGroup = 706E17682A3C7C56007A77B3 /* Products */;
 			projectDirPath = "";
@@ -620,6 +620,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		707074022A4FBFF000478EF8 /* XCRemoteSwiftPackageReference "TodoItem-Package-2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ExPoSeS2811/TodoItem-Package-2.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		70D24ABC2A4FB12700A760B1 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CocoaLumberjack/CocoaLumberjack.git";
@@ -628,17 +636,14 @@
 				minimumVersion = 3.8.0;
 			};
 		};
-		70D24AEC2A4FBDD000A760B1 /* XCRemoteSwiftPackageReference "TodoItem-Package" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ExPoSeS2811/TodoItem-Package.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		707074032A4FBFF000478EF8 /* MyLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 707074022A4FBFF000478EF8 /* XCRemoteSwiftPackageReference "TodoItem-Package-2" */;
+			productName = MyLibrary;
+		};
 		70D24ABD2A4FB12700A760B1 /* CocoaLumberjack */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 70D24ABC2A4FB12700A760B1 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
@@ -653,11 +658,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 70D24ABC2A4FB12700A760B1 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
 			productName = CocoaLumberjackSwiftLogBackend;
-		};
-		70D24AED2A4FBDD100A760B1 /* MyLibrary */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 70D24AEC2A4FBDD000A760B1 /* XCRemoteSwiftPackageReference "TodoItem-Package" */;
-			productName = MyLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
