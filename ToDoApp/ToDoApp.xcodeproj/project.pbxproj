@@ -24,6 +24,10 @@
 		708135172A40FDD600A7D61C /* UIStackView+addArrangedSubviews().swift in Sources */ = {isa = PBXBuildFile; fileRef = 708135162A40FDD600A7D61C /* UIStackView+addArrangedSubviews().swift */; };
 		70A061292A44AF0F001603FF /* DeadlineDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A061282A44AF0F001603FF /* DeadlineDatePicker.swift */; };
 		70A0612B2A44B779001603FF /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A0612A2A44B778001603FF /* DeleteButton.swift */; };
+		70A448E02A4B68CF00DB14E8 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A448DF2A4B68CF00DB14E8 /* HomeViewController.swift */; };
+		70A448E32A4B691300DB14E8 /* TaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A448E12A4B691200DB14E8 /* TaskTableViewCell.swift */; };
+		70A448E42A4B691300DB14E8 /* CreateTaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A448E22A4B691300DB14E8 /* CreateTaskTableViewCell.swift */; };
+		70E705132A4E07450011C2C5 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E705122A4E07450011C2C5 /* Animation.swift */; };
 		70EE49F02A46A132008B6247 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 70EE49EF2A46A132008B6247 /* SF-Pro-Display-Bold.otf */; };
 		70EE49F22A46A170008B6247 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 70EE49F12A46A170008B6247 /* SF-Pro-Display-Semibold.otf */; };
 		70EE49F42A46A1A6008B6247 /* SFProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70EE49F32A46A1A6008B6247 /* SFProText-Regular.ttf */; };
@@ -62,6 +66,10 @@
 		708135162A40FDD600A7D61C /* UIStackView+addArrangedSubviews().swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+addArrangedSubviews().swift"; sourceTree = "<group>"; };
 		70A061282A44AF0F001603FF /* DeadlineDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadlineDatePicker.swift; sourceTree = "<group>"; };
 		70A0612A2A44B778001603FF /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
+		70A448DF2A4B68CF00DB14E8 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		70A448E12A4B691200DB14E8 /* TaskTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTableViewCell.swift; sourceTree = "<group>"; };
+		70A448E22A4B691300DB14E8 /* CreateTaskTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTaskTableViewCell.swift; sourceTree = "<group>"; };
+		70E705122A4E07450011C2C5 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		70EE49EF2A46A132008B6247 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-Pro-Display-Bold.otf"; path = "../../../../../../Downloads/Telegram Desktop/SF-Pro-Display 2/SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
 		70EE49F12A46A170008B6247 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-Pro-Display-Semibold.otf"; path = "../../../../../../Downloads/Telegram Desktop/SF-Pro-Display 3/SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
 		70EE49F32A46A1A6008B6247 /* SFProText-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SFProText-Regular.ttf"; path = "../../../../../../Downloads/Telegram Desktop/SFProText-Regular.ttf"; sourceTree = "<group>"; };
@@ -154,6 +162,8 @@
 				70A0612A2A44B778001603FF /* DeleteButton.swift */,
 				70F1AA4B2A46273400303B7C /* ColorPicker.swift */,
 				70284C5E2A4439C5007207D4 /* SectionStackView.swift */,
+				70A448E22A4B691300DB14E8 /* CreateTaskTableViewCell.swift */,
+				70A448E12A4B691200DB14E8 /* TaskTableViewCell.swift */,
 				70A061282A44AF0F001603FF /* DeadlineDatePicker.swift */,
 				70284C5A2A4434B0007207D4 /* DeadlineSwitch.swift */,
 				70284C582A442CF8007207D4 /* DescriptionTextView.swift */,
@@ -166,6 +176,8 @@
 			isa = PBXGroup;
 			children = (
 				706E176E2A3C7C56007A77B3 /* DetailViewController.swift */,
+				70E705122A4E07450011C2C5 /* Animation.swift */,
+				70A448DF2A4B68CF00DB14E8 /* HomeViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -304,7 +316,11 @@
 				706E176B2A3C7C56007A77B3 /* AppDelegate.swift in Sources */,
 				706E177F2A3C7D3B007A77B3 /* TodoItem.swift in Sources */,
 				70F1AA4E2A463C1D00303B7C /* UIColor+hex.swift in Sources */,
+				70A448E42A4B691300DB14E8 /* CreateTaskTableViewCell.swift in Sources */,
 				706E17812A3C7E44007A77B3 /* FileCache.swift in Sources */,
+				70A448E32A4B691300DB14E8 /* TaskTableViewCell.swift in Sources */,
+				70A448E02A4B68CF00DB14E8 /* HomeViewController.swift in Sources */,
+				70E705132A4E07450011C2C5 /* Animation.swift in Sources */,
 				708135172A40FDD600A7D61C /* UIStackView+addArrangedSubviews().swift in Sources */,
 				70284C5F2A4439C5007207D4 /* SectionStackView.swift in Sources */,
 				70284C5B2A4434B0007207D4 /* DeadlineSwitch.swift in Sources */,

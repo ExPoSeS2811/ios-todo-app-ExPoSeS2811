@@ -11,7 +11,6 @@ class DeleteButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         layer.cornerRadius = 16
-        isEnabled = false
         layer.cornerCurve = .continuous
         backgroundColor = .secondaryBack
         setTitle("Удалить", for: .normal)

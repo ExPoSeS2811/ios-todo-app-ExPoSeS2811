@@ -5,10 +5,18 @@
 //  Created by Gleb Rasskazov on 16.06.2023.
 //
 
-import Foundation
+import UIKit
 
 enum Importance: String, CaseIterable {
     case low, normal, high
+    
+    var image: UIImage {
+        switch self {
+        case .low: return UIImage.low
+        case .normal: return UIImage.normal
+        case .high: return UIImage.high
+        }
+    }
 }
 
 struct TodoItem {
@@ -16,7 +24,7 @@ struct TodoItem {
     let text: String
     let importance: Importance
     let deadline: Date?
-    let isDone: Bool
+    var isDone: Bool
     let createdAt: Date
     let changedAt: Date?
     let textColor: String?
