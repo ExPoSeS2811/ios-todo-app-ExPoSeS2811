@@ -73,7 +73,6 @@ class TaskTableViewCell: UITableViewCell {
         
         label.text = "Задание"
         label.numberOfLines = 3
-        label.textColor = UIColor(named: "PrimaryLabel")
         
         return label
     }()
@@ -150,7 +149,7 @@ class TaskTableViewCell: UITableViewCell {
             deadlineTaskStackView.isHidden = true
             deadlineLabel.text = ""
         }
-
+        
         if item.importance == .high || item.importance == .low {
             importanceImageView.image = item.importance.image
             importanceImageView.isHidden = false
@@ -158,19 +157,39 @@ class TaskTableViewCell: UITableViewCell {
                 statusButton.setImage(State.done.image, for: .normal)
                 let attributedText = NSAttributedString(string: item.text, attributes: [
                     NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                    NSAttributedString.Key.foregroundColor: UIColor.tertiaryLabel
+
                 ])
                 descriptionTaskLabel.attributedText = attributedText
+                if let deadline = item.deadline {
+                    deadlineTaskStackView.isHidden = false
+                    deadlineLabel.text = configureDate(with: deadline)
+                } else {
+                    deadlineTaskStackView.isHidden = true
+                    deadlineLabel.text = ""
+                }
+                
 
             } else {
                 statusButton.setImage(item.importance == .high ? State.critical.image : State.normal.image, for: .normal)
                 let attributedText = NSAttributedString(string: item.text)
                 descriptionTaskLabel.attributedText = attributedText
+                if let deadline = item.deadline {
+                    deadlineTaskStackView.isHidden = false
+                    deadlineLabel.text = configureDate(with: deadline)
+                } else {
+                    deadlineTaskStackView.isHidden = true
+                    deadlineLabel.text = ""
+                }
+                
             }
         } else {
+            importanceImageView.image = nil
             if item.isDone {
                 statusButton.setImage(State.done.image, for: .normal)
                 let attributedText = NSAttributedString(string: item.text, attributes: [
                     NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                    NSAttributedString.Key.foregroundColor: UIColor.tertiaryLabel
                 ])
                 descriptionTaskLabel.attributedText = attributedText
             } else {
@@ -179,7 +198,7 @@ class TaskTableViewCell: UITableViewCell {
                 descriptionTaskLabel.attributedText = attributedText
             }
         }
-
+        
         if let color = item.textColor {
             descriptionTaskLabel.textColor = UIColor.colorFromHex(color)
         }
