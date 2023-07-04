@@ -5,8 +5,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>SF-Pro-Display-Bold.otf</string>
-		<string>SFProText-Semibold.ttf</string>
 		<string>SF-Pro-Display-Semibold.otf</string>
+		<string>SFProText-Semibold.ttf</string>
 		<string>SFProText-Regular.ttf</string>
 	</array>
 </dict>
