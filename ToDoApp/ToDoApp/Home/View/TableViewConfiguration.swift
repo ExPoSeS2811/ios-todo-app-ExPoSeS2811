@@ -9,15 +9,15 @@ import UIKit
 
 extension HomeViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tasks.count + 1
+        return homeViewModel.items.count + 1
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row < tasks.count {
+        if indexPath.row < homeViewModel.items.count {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "TaskTableViewCell", for: indexPath) as? TaskTableViewCell else { return UITableViewCell() }
-            cell.set(with: tasks[indexPath.row])
             cell.statusButton.tag = indexPath.row
             cell.delegate = self
+            cell.set(with: homeViewModel.items[indexPath.row])
             return cell
         }
         
@@ -28,20 +28,19 @@ extension HomeViewController: UITableViewDataSource {
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row < tasks.count {
-            let currentItem = tasks[indexPath.row]
-            let vc = DetailViewController(currentItem: currentItem)
+        if indexPath.row < homeViewModel.items.count {
+            let vc = DetailViewController(currentItem: homeViewModel.items[indexPath.row])
             let navController = UINavigationController(rootViewController: vc)
             navController.transitioningDelegate = self
             navController.modalPresentationStyle = .custom
             self.present(navController, animated: true)
             vc.completionHandler = { [self] item in
                 if let item = item {
-                    tasks[indexPath.row] = item
+                    homeViewModel.items[indexPath.row] = item
+                    homeViewModel.saveData()
                 } else {
-                    tasks.remove(at: indexPath.row)
+                    homeViewModel.deleteItem(at: indexPath.row)
                 }
-                saveDataAndReloadCell()
             }
         } else {
             createNewItem()
@@ -50,31 +49,34 @@ extension HomeViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard indexPath.row < tasks.count else { return nil }
+        guard indexPath.row < homeViewModel.items.count else { return nil }
         
         let markAsDoneAction = UIContextualAction(style: .normal, title: "Done") { [weak self] _, _, completionHandler in
             guard let self = self else { return }
-            tasks[indexPath.row].isDone ? markTaskAsUndone(at: indexPath.row) : markTaskAsDone(at: indexPath.row)
-            saveDataAndReloadCell()
+            homeViewModel.items[indexPath.row].isDone.toggle()
+            homeViewModel.saveData()
             completionHandler(true)
         }
         
-        let image = UIImage(systemName: "checkmark.circle.fill")
-        markAsDoneAction.image = image?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        markAsDoneAction.backgroundColor = .greenDisplay
+        if homeViewModel.items[indexPath.row].isDone {
+            markAsDoneAction.image = UIImage(systemName: "circle")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            markAsDoneAction.backgroundColor = .grayDisplay
+            markAsDoneAction.title = "Undone"
+        } else {
+            markAsDoneAction.image = UIImage(systemName: "checkmark.circle.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            markAsDoneAction.backgroundColor = .greenDisplay
+        }
         let configuration = UISwipeActionsConfiguration(actions: [markAsDoneAction])
         
         return configuration
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard indexPath.row < tasks.count else { return nil }
+        guard indexPath.row < homeViewModel.items.count else { return nil }
         
         let deleteAction = UIContextualAction(style: .normal, title: "Done") { [weak self] _, _, _ in
             guard let self = self else { return }
-            deleteTask(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            saveDataAndReloadCell()
+            homeViewModel.deleteItem(at: indexPath.row)
         }
         
         let image = UIImage(systemName: "trash.fill")

@@ -5,8 +5,8 @@
 //  Created by Gleb Rasskazov on 26.06.2023.
 //
 
-import UIKit
 import MyLibrary
+import UIKit
 
 protocol TaskTableViewCellDelegate {
     func didEditingStatusButton(source: UIButton)
@@ -142,86 +142,45 @@ class TaskTableViewCell: UITableViewCell {
         ])
     }
     
+    override func prepareForReuse() {
+        deadlineTaskStackView.isHidden = true
+        importanceImageView.isHidden = true
+        statusButton.setImage(State.normal.image, for: .normal)
+        descriptionTaskLabel.textColor = .primaryLabel
+        descriptionTaskLabel.attributedText = nil
+    }
+    
     func set(with item: TodoItem) {
+        descriptionTaskLabel.text = item.text
         if let deadline = item.deadline {
             deadlineTaskStackView.isHidden = false
-            deadlineLabel.text = configureDate(with: deadline)
-        } else {
-            deadlineTaskStackView.isHidden = true
-            deadlineLabel.text = ""
+            deadlineLabel.text = deadline.configureDate(format: "d MMMM")
         }
         
         if item.importance == .high || item.importance == .low {
-            if item.importance == .high {
-                importanceImageView.image = UIImage.high
-            } else {
-                importanceImageView.image = UIImage.low
-            }
             importanceImageView.isHidden = false
-            if item.isDone {
-                statusButton.setImage(State.done.image, for: .normal)
-                let attributedText = NSAttributedString(string: item.text, attributes: [
-                    NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue,
-                    NSAttributedString.Key.foregroundColor: UIColor.tertiaryLabel
-
-                ])
-                descriptionTaskLabel.attributedText = attributedText
-                if let deadline = item.deadline {
-                    deadlineTaskStackView.isHidden = false
-                    deadlineLabel.text = configureDate(with: deadline)
-                } else {
-                    deadlineTaskStackView.isHidden = true
-                    deadlineLabel.text = ""
-                }
-                
-
-            } else {
-                statusButton.setImage(item.importance == .high ? State.critical.image : State.normal.image, for: .normal)
-                let attributedText = NSAttributedString(string: item.text)
-                descriptionTaskLabel.attributedText = attributedText
-                if let deadline = item.deadline {
-                    deadlineTaskStackView.isHidden = false
-                    deadlineLabel.text = configureDate(with: deadline)
-                } else {
-                    deadlineTaskStackView.isHidden = true
-                    deadlineLabel.text = ""
-                }
-                
-            }
-        } else {
-            importanceImageView.image = nil
-            if item.isDone {
-                statusButton.setImage(State.done.image, for: .normal)
-                let attributedText = NSAttributedString(string: item.text, attributes: [
-                    NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue,
-                    NSAttributedString.Key.foregroundColor: UIColor.tertiaryLabel
-                ])
-                descriptionTaskLabel.attributedText = attributedText
-            } else {
-                statusButton.setImage(State.normal.image, for: .normal)
-                let attributedText = NSAttributedString(string: item.text)
-                descriptionTaskLabel.attributedText = attributedText
-            }
+            importanceImageView.image = item.importance == .high ? .high : .low
+            item.importance == .high && !item.isDone ? statusButton.setImage(State.critical.image, for: .normal) : statusButton.setImage(State.normal.image, for: .normal)
         }
         
-        if let color = item.textColor {
-            descriptionTaskLabel.textColor = UIColor.colorFromHex(color)
+        if item.isDone {
+            statusButton.setImage(State.done.image, for: .normal)
+            importanceImageView.isHidden = true
+            let attributedString = NSAttributedString(string: descriptionTaskLabel.text ?? item.text, attributes: [
+                NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                NSAttributedString.Key.strikethroughColor: UIColor.tertiaryLabel,
+                NSAttributedString.Key.foregroundColor: UIColor.tertiaryLabel,
+            ])
+            descriptionTaskLabel.attributedText = attributedString
         }
-    }
         
-    private func configureDate(with date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        
-        dateFormatter.dateStyle = .medium
-        dateFormatter.dateFormat = "d MMMM"
-        dateFormatter.timeZone = TimeZone(identifier: "Europe/Moscow")
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        
-        return dateFormatter.string(from: date)
+        if let textColor = item.textColor,
+           !item.isDone {
+            descriptionTaskLabel.textColor = UIColor.colorFromHex(textColor)
+        }
     }
     
     @objc private func changeState(_ sender: UIButton) {
-        print("Tapped")
         delegate?.didEditingStatusButton(source: sender)
     }
 }
@@ -231,7 +190,7 @@ enum State {
     
     var image: UIImage {
         switch self {
-        case .normal: return UIImage(systemName: "circle")?.withTintColor(.separatorSupport, renderingMode: .alwaysOriginal) ?? UIImage.add
+        case .normal: return UIImage(systemName: "circle")?.withTintColor(.separatorSupport, renderingMode: .alwaysOriginal) ?? UIImage.normal
         case .critical: return UIImage.prop
         case .done: return UIImage.done
         }

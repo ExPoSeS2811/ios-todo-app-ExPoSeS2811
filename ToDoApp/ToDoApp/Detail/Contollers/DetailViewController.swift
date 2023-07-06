@@ -199,7 +199,7 @@ class DetailViewController: UIViewController {
     lazy var calendarPicker: UIDatePicker = {
         let datePicker = DeadlineDatePicker()
         
-        dateButton.setTitle(configureDate(with: datePicker.date), for: .normal)
+        dateButton.setTitle(datePicker.date.configureDate(), for: .normal)
         datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
         
         return datePicker
@@ -410,17 +410,6 @@ class DetailViewController: UIViewController {
         ])
     }
 
-    private func configureDate(with date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        
-        dateFormatter.dateStyle = .medium
-        dateFormatter.dateFormat = "d MMMM yyyy"
-        dateFormatter.timeZone = TimeZone(identifier: "Europe/Moscow")
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        
-        return dateFormatter.string(from: date)
-    }
-    
     private func setupDataFromItem(item: TodoItem?) {
         guard let item = item else { return }
         currentTaskId = item.id
@@ -431,7 +420,7 @@ class DetailViewController: UIViewController {
         importanceSegmentedControl.selectedSegmentIndex = getIndex(by: item.importance)
         if let deadline = item.deadline {
             deadlineSwitch.isOn = true
-            dateButton.setTitle(configureDate(with: deadline), for: .normal)
+            dateButton.setTitle(deadline.configureDate(), for: .normal)
             calendarPicker.date = deadline
             visibilitySetting(isDateHidden: false, isCalendarHidden: true)
         }
@@ -543,7 +532,7 @@ class DetailViewController: UIViewController {
     @objc func deadlineSwitchValueChanged(_ sender: UISwitch) {
         if !sender.isOn {
             guard let date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) else { return }
-            dateButton.setTitle(configureDate(with: date), for: .normal)
+            dateButton.setTitle(date.configureDate(), for: .normal)
             calendarPicker.date = date
             if !calendarPicker.isHidden {
                 animateCalendarDisappereance()
@@ -555,7 +544,7 @@ class DetailViewController: UIViewController {
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-        dateButton.setTitle(configureDate(with: sender.date), for: .normal)
+        dateButton.setTitle(sender.date.configureDate(), for: .normal)
         isModified = !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && textView.text != "Что надо сделать?" && textView.textColor != .tertiaryLabel
     }
     
