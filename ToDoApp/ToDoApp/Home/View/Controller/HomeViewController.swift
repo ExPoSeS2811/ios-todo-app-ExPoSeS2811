@@ -23,7 +23,7 @@ class HomeViewController: UIViewController {
     lazy var statusDoneTasksLabel: UILabel = {
         let label = UILabel()
         
-        label.text = "Выполнено — \(completedTasks.count)"
+        label.text = "Выполнено — \(0)"
         label.textColor = UIColor.tertiaryLabel
         
         return label
@@ -69,17 +69,9 @@ class HomeViewController: UIViewController {
     }()
     
     // MARK: Properties
-    
-    var tasks: [TodoItem] = []
-    var completedTasks: [TodoItem] = [] {
-        didSet {
-            statusDoneTasksLabel.text = "Выполнено — \(completedTasks.count)"
-        }
-    }
 
-    private let fileCache: FileCache
-    private var showCompletedTasks = false
-    
+    var homeViewModel: HomeViewModel
+
     // MARK: - Life cycle
 
     override func viewDidLoad() {
@@ -87,56 +79,13 @@ class HomeViewController: UIViewController {
         tasksTableView.register(TaskTableViewCell.self, forCellReuseIdentifier: "TaskTableViewCell")
         tasksTableView.register(CreateTaskTableViewCell.self, forCellReuseIdentifier: "CreateTaskTableViewCell")
         setupUI()
+        homeViewModel.loadData()
     }
     
-    init(fileCache: FileCache) {
-        self.fileCache = fileCache
+    init(viewModel: HomeViewModel) {
+        self.homeViewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        loadDataFromFile()
-    }
-    
-    private func loadDataFromFile() {
-        do {
-            try fileCache.loadJSON(from: "storage_json")
-            tasks = Array(fileCache.tasks.values).sorted { $0.createdAt < $1.createdAt }
-            completedTasks = tasks.filter { $0.isDone }
-            tasks.removeAll { $0.isDone }
-        } catch let error as FileCacheErrors {
-            switch error {
-            case .parsingError:
-                print("Incorrect format")
-            case .systemDirectoryNotFound:
-                print("Not found system directory at \(error)")
-            }
-        } catch {
-            print("Unhandled error: \(error)")
-        }
-    }
-    
-    func saveDataAndReloadCell() {
-        fileCache.tasks.removeAll()
-        tasks.forEach { fileCache.add(newTask: $0) }
-        completedTasks.forEach { fileCache.add(newTask: $0) }
-        do {
-            try fileCache.saveJSON(to: "storage_json")
-        } catch let error as FileCacheErrors {
-            switch error {
-            case .parsingError:
-                print("Incorrect format")
-            case .systemDirectoryNotFound:
-                print("Not found system directory at \(error)")
-            }
-        } catch {
-            print("Unhandled error: \(error)")
-        }
-        reloadCell()
-    }
-    
-    private func reloadCell() {
-        tasks.removeAll { $0.isDone }
-        tasks += showCompletedTasks ? completedTasks : []
-        tasks = tasks.sorted { $0.createdAt < $1.createdAt }
-        tasksTableView.reloadData()
+        setupViewModel()
     }
     
     @available(*, unavailable)
@@ -149,9 +98,9 @@ class HomeViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = UIColor.iOSPrimaryBack
         view.addSubviews([statusStackView, tasksTableView, addTask])
-        setupConstraints()
         setupNavigationBar()
         tabBarController?.tabBar.backgroundColor = .clear
+        setupConstraints()
     }
 
     private func setupConstraints() {
@@ -179,6 +128,18 @@ class HomeViewController: UIViewController {
         ])
     }
     
+    private func setupViewModel() {
+        homeViewModel.reloadData = { [weak self] in
+            self?.tasksTableView.reloadData()
+        }
+        
+        homeViewModel.updateCompletedTasksCount = { [weak self] count in
+            DispatchQueue.main.async {
+                self?.statusDoneTasksLabel.text = "Выполнено — \(count)"
+            }
+        }
+    }
+    
     private func setupNavigationBar() {
         title = "Мои дела"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -190,48 +151,29 @@ class HomeViewController: UIViewController {
         navigationController?.navigationBar.largeTitleTextAttributes = titleAttributes
     }
     
-    func markTaskAsDone(at index: Int) {
-        tasks[index].isDone = true
-        completedTasks.append(tasks.remove(at: index))
-    }
-
-    func markTaskAsUndone(at index: Int) {
-        tasks[index].isDone = false
-        completedTasks.removeAll(where: { $0.id == tasks[index].id })
-    }
-
-    func deleteTask(at index: Int) {
-        completedTasks.removeAll(where: { $0.id == tasks[index].id })
-        tasks.remove(at: index)
-    }
-    
+    // MARK: - Objc methods
     @objc func createNewItem() {
         let vc = DetailViewController(currentItem: nil)
         let navController = UINavigationController(rootViewController: vc)
         present(navController, animated: true)
         vc.completionHandler = { [self] item in
             if let item = item {
-                tasks.append(item)
-                saveDataAndReloadCell()
+                homeViewModel.items.append(item)
+                homeViewModel.saveData()
             }
         }
     }
 
     @objc private func toggleInvisibleCell() {
-        showCompletedTasks.toggle()
-        statusInvisibleTask.setTitle(!showCompletedTasks ? "Показать" : "Скрыть", for: .normal)
-        reloadCell()
+        homeViewModel.showCompletedTasks.toggle()
+        homeViewModel.showCompletedTasks ? homeViewModel.changeVisibility(to: .showCompleted) : homeViewModel.changeVisibility(to: .hideCompleted)
+        statusInvisibleTask.setTitle(homeViewModel.showCompletedTasks ? "Скрыть" : "Показать", for: .normal)
     }
 }
 
 extension HomeViewController: TaskTableViewCellDelegate {
     func didEditingStatusButton(source: UIButton) {
-        if source.imageView?.image != State.done.image {
-            source.setImage(State.done.image, for: .normal)
-            markTaskAsDone(at: source.tag)
-        } else {
-            markTaskAsUndone(at: source.tag)
-        }
-        saveDataAndReloadCell()
+        homeViewModel.items[source.tag].isDone.toggle()
+        homeViewModel.saveData()
     }
 }

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import CocoaLumberjackSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,17 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        DDLog.add(DDOSLogger.sharedInstance)
-
-        let fileLogger = DDFileLogger() // File Logger
-        fileLogger.rollingFrequency = 60 * 60 * 24 // 24 hours
-        fileLogger.logFileManager.maximumNumberOfLogFiles = 7
-
-        DDLog.add(fileLogger)
-
         if let window = window {
             let navigationController = UINavigationController()
-            navigationController.viewControllers = [HomeViewController(fileCache: fileCache)]
+            let homeViewModel = HomeViewModel(fileCache: fileCache)
+            navigationController.viewControllers = [HomeViewController(viewModel: homeViewModel)]
             window.rootViewController = navigationController
             window.makeKeyAndVisible()
         }

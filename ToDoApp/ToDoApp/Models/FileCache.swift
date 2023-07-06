@@ -5,7 +5,6 @@
 //  Created by Gleb Rasskazov on 16.06.2023.
 //
 
-import CocoaLumberjackSwift
 import Foundation
 import MyLibrary
 
@@ -31,7 +30,6 @@ final class FileCache {
     
     func saveJSON(to file: String) throws {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            DDLogError("[SAVE JSON] - System directory not found")
             throw FileCacheErrors.systemDirectoryNotFound
         }
         
@@ -43,7 +41,6 @@ final class FileCache {
     
     func loadJSON(from file: String) throws {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            DDLogError("[LOAD JSON] - System directory not found")
             throw FileCacheErrors.systemDirectoryNotFound
         }
         
@@ -52,7 +49,6 @@ final class FileCache {
         let json = try JSONSerialization.jsonObject(with: data)
         
         guard let jsn = json as? [Any] else {
-            DDLogError("[PARSE JSON] - Incorrect format")
             throw FileCacheErrors.parsingError
         }
         
@@ -64,7 +60,6 @@ final class FileCache {
         let csvHeader = "id;text;importance;deadline;isDone;createdAt;changedAt;textColor"
 
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            DDLogError("[SAVE CSV] - System directory not found")
             throw FileCacheErrors.systemDirectoryNotFound
         }
         
@@ -75,7 +70,6 @@ final class FileCache {
     
     func loadCSV(from file: String) throws {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            DDLogError("[LOAD JSON] - System directory not found")
             throw FileCacheErrors.systemDirectoryNotFound
         }
 
