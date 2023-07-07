@@ -8,7 +8,7 @@
 import Foundation
 
 enum Importance: String, CaseIterable {
-    case low, normal, high
+    case low, basic, important
 }
 
 struct TodoItem {
@@ -45,16 +45,16 @@ struct TodoItem {
 extension TodoItem {
     static func parse(json: Any) -> TodoItem? {
         guard let jsn = json as? [String: Any] else { return nil }
-        guard let id = jsn["id"] as? String,
-              let text = jsn["text"] as? String,
-              let createdAt = (jsn["createdAt"] as? Int).flatMap({ Date(timeIntervalSince1970: TimeInterval($0)) })
+        guard let id = jsn[Keys.id.rawValue] as? String,
+              let text = jsn[Keys.text.rawValue] as? String,
+              let createdAt = (jsn[Keys.created_at.rawValue] as? Int).flatMap({ Date(timeIntervalSince1970: TimeInterval($0)) })
         else { return nil }
         
-        let importance = (jsn["importance"] as? String).flatMap { Importance(rawValue: $0) } ?? .normal
-        let deadline = (jsn["deadline"] as? Int).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
-        let isDone = jsn["isDone"] as? Bool ?? false
-        let changedAt = (jsn["changedAt"] as? Int).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
-        let textColor = jsn["textColor"] as? String
+        let importance = (jsn[Keys.importance.rawValue] as? String).flatMap { Importance(rawValue: $0) } ?? .basic
+        let deadline = (jsn[Keys.deadline.rawValue] as? Int).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
+        let isDone = jsn[Keys.done.rawValue] as? Bool ?? false
+        let changedAt = (jsn[Keys.changed_at.rawValue] as? Int).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
+        let textColor = jsn[Keys.color.rawValue] as? String
         
         return TodoItem(
             id: id,
@@ -71,23 +71,20 @@ extension TodoItem {
     var json: Any {
         var res: [String: Any] = [:]
         
-        res["id"] = id
-        res["text"] = text
-        if importance != .normal {
-            res["importance"] = importance.rawValue
-        }
+        res[Keys.id.rawValue] = id
+        res[Keys.text.rawValue] = text
+        res[Keys.importance.rawValue] = importance.rawValue
         if let deadline = deadline {
-            res["deadline"] = Int(deadline.timeIntervalSince1970)
+            res[Keys.deadline.rawValue] = Int(deadline.timeIntervalSince1970)
         }
-        res["isDone"] = isDone
-        res["createdAt"] = Int(createdAt.timeIntervalSince1970)
-        if let changedAt = changedAt {
-            res["changedAt"] = Int(changedAt.timeIntervalSince1970)
-        }
+        res[Keys.done.rawValue] = isDone
+        res[Keys.created_at.rawValue] = Int(createdAt.timeIntervalSince1970)
+
+        res[Keys.changed_at.rawValue] = Int(changedAt?.timeIntervalSince1970 ?? 102020)
         if let textColor = textColor {
-            res["textColor"] = textColor
+            res[Keys.color.rawValue] = textColor
         }
-        
+        res[Keys.last_updated_by.rawValue] = ""
         return res
     }
 }
@@ -100,7 +97,7 @@ extension TodoItem {
               let createdAt = Int(columns[5]).flatMap({ Date(timeIntervalSince1970: TimeInterval($0)) }) else { return nil }
         let id = columns[0]
         let text = columns[1]
-        let importance = Importance(rawValue: columns[2]) ?? .normal
+        let importance = Importance(rawValue: columns[2]) ?? .basic
         
         let deadline = Int(columns[3]).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
         let isDone = Bool(columns[4]) ?? false
@@ -123,9 +120,13 @@ extension TodoItem {
         let deadlineString = deadline.flatMap { String(Int($0.timeIntervalSince1970)) } ?? ""
         let changedAtString = changedAt.flatMap { String(Int($0.timeIntervalSince1970)) } ?? ""
         let createdAtString = String(Int(createdAt.timeIntervalSince1970))
-        let importanceString = importance != .normal ? importance.rawValue : ""
+        let importanceString = importance != .basic ? importance.rawValue : ""
         let textColorString = textColor != nil ? textColor! : ""
         
         return "\(id);\(text);\(importanceString);\(deadlineString);\(isDone);\(createdAtString);\(changedAtString);\(textColorString)"
     }
+}
+
+enum Keys: String {
+    case id, text, importance, deadline, done, color, created_at, changed_at, last_updated_by
 }

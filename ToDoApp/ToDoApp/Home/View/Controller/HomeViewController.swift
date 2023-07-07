@@ -71,6 +71,8 @@ class HomeViewController: UIViewController {
     // MARK: Properties
 
     var homeViewModel: HomeViewModel
+    var networking: DefaultNetworkService? = nil
+
 
     // MARK: - Life cycle
 
@@ -80,6 +82,9 @@ class HomeViewController: UIViewController {
         tasksTableView.register(CreateTaskTableViewCell.self, forCellReuseIdentifier: "CreateTaskTableViewCell")
         setupUI()
         homeViewModel.loadData()
+        
+        networking = DefaultNetworkService()
+        
     }
     
     init(viewModel: HomeViewModel) {
@@ -139,7 +144,7 @@ class HomeViewController: UIViewController {
             }
         }
     }
-    
+        
     private func setupNavigationBar() {
         title = "Мои дела"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -151,7 +156,19 @@ class HomeViewController: UIViewController {
         navigationController?.navigationBar.largeTitleTextAttributes = titleAttributes
     }
     
+    private func handleResponse(_ result: Result<[TodoItem], Error>) {
+        switch result {
+        case .success(let items):
+            homeViewModel.items = items
+            homeViewModel.saveData()
+        case .failure(let error):
+            // TODO: Show alert with error
+            print("error")
+        }
+    }
+    
     // MARK: - Objc methods
+
     @objc func createNewItem() {
         let vc = DetailViewController(currentItem: nil)
         let navController = UINavigationController(rootViewController: vc)
@@ -160,6 +177,10 @@ class HomeViewController: UIViewController {
             if let item = item {
                 homeViewModel.items.append(item)
                 homeViewModel.saveData()
+                networking?.makeRequest(with: .post(item), completion: { result in
+                    // TODO: Relalize to check with isDirty
+                    print("change is dirty")
+                })
             }
         }
     }

@@ -11,6 +11,7 @@ protocol HomeViewModelProtocol {
     var reloadData: (() -> Void)? { get set }
     var showCompletedTasks: Bool { get set }
     var updateCompletedTasksCount: ((Int) -> Void)? { get }
+    var revision: Int { get set }
 }
 
 class HomeViewModel: HomeViewModelProtocol {
@@ -20,6 +21,14 @@ class HomeViewModel: HomeViewModelProtocol {
     var showCompletedTasks: Bool = false
     var fileCache: FileCache
     var reloadData: (() -> Void)?
+    var revision: Int {
+        get {
+            UserDefaults.standard.integer(forKey: "revision")
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: "revision")
+        }
+    }
     
     var items: [TodoItem] = [] {
         didSet {

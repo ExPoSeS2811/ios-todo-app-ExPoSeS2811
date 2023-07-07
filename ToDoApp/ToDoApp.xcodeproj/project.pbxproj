@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7018DA582A57573A00D5AC9C /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA572A57573A00D5AC9C /* URLSession.swift */; };
+		7018DA5A2A57577800D5AC9C /* DefaultNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA592A57577800D5AC9C /* DefaultNetworkService.swift */; };
+		7018DA5C2A5758A200D5AC9C /* HTTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA5B2A5758A200D5AC9C /* HTTPResponse.swift */; };
+		7018DA5E2A57630300D5AC9C /* NetworkingErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA5D2A57630300D5AC9C /* NetworkingErrors.swift */; };
+		7018DA662A5898AA00D5AC9C /* Revision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA652A5898AA00D5AC9C /* Revision.swift */; };
 		70284C592A442CF8007207D4 /* DescriptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70284C582A442CF8007207D4 /* DescriptionTextView.swift */; };
 		70284C5B2A4434B0007207D4 /* DeadlineSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70284C5A2A4434B0007207D4 /* DeadlineSwitch.swift */; };
 		70284C5D2A4436E8007207D4 /* ImportanceSegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70284C5C2A4436E8007207D4 /* ImportanceSegmentControl.swift */; };
@@ -50,6 +55,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7018DA572A57573A00D5AC9C /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
+		7018DA592A57577800D5AC9C /* DefaultNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkService.swift; sourceTree = "<group>"; };
+		7018DA5B2A5758A200D5AC9C /* HTTPResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponse.swift; sourceTree = "<group>"; };
+		7018DA5D2A57630300D5AC9C /* NetworkingErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingErrors.swift; sourceTree = "<group>"; };
+		7018DA652A5898AA00D5AC9C /* Revision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Revision.swift; sourceTree = "<group>"; };
 		70284C582A442CF8007207D4 /* DescriptionTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionTextView.swift; sourceTree = "<group>"; };
 		70284C5A2A4434B0007207D4 /* DeadlineSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadlineSwitch.swift; sourceTree = "<group>"; };
 		70284C5C2A4436E8007207D4 /* ImportanceSegmentControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportanceSegmentControl.swift; sourceTree = "<group>"; };
@@ -103,6 +113,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7018DA562A5755F300D5AC9C /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				7018DA572A57573A00D5AC9C /* URLSession.swift */,
+				7018DA592A57577800D5AC9C /* DefaultNetworkService.swift */,
+				7018DA652A5898AA00D5AC9C /* Revision.swift */,
+				7018DA5B2A5758A200D5AC9C /* HTTPResponse.swift */,
+				7018DA5D2A57630300D5AC9C /* NetworkingErrors.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
 		7061EAAD2A4200C30083FCC5 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -135,6 +157,7 @@
 		706E17692A3C7C56007A77B3 /* ToDoApp */ = {
 			isa = PBXGroup;
 			children = (
+				7018DA562A5755F300D5AC9C /* Networking */,
 				70B13D602A52014E00EB750B /* Home */,
 				70B13D632A52022700EB750B /* Detail */,
 				70EE49EE2A46A07C008B6247 /* Supporting Files */,
@@ -199,7 +222,6 @@
 			isa = PBXGroup;
 			children = (
 				70B13D652A52025900EB750B /* Views */,
-				70B13D642A52025300EB750B /* Contollers */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -215,6 +237,7 @@
 		70B13D652A52025900EB750B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				70B13D642A52025300EB750B /* Contollers */,
 				70A0612A2A44B778001603FF /* DeleteButton.swift */,
 				70F1AA4B2A46273400303B7C /* ColorPicker.swift */,
 				70284C5E2A4439C5007207D4 /* SectionStackView.swift */,
@@ -366,6 +389,7 @@
 				70D1797D2A5501FD0003830D /* HomeViewModel.swift in Sources */,
 				70284C5D2A4436E8007207D4 /* ImportanceSegmentControl.swift in Sources */,
 				70F1AA4C2A46273400303B7C /* ColorPicker.swift in Sources */,
+				7018DA662A5898AA00D5AC9C /* Revision.swift in Sources */,
 				70284C612A443E93007207D4 /* UIFont+static.swift in Sources */,
 				706E176F2A3C7C56007A77B3 /* DetailViewController.swift in Sources */,
 				70A0612B2A44B779001603FF /* DeleteButton.swift in Sources */,
@@ -381,9 +405,13 @@
 				70A448E32A4B691300DB14E8 /* TaskTableViewCell.swift in Sources */,
 				70A448E02A4B68CF00DB14E8 /* HomeViewController.swift in Sources */,
 				70E705132A4E07450011C2C5 /* Animation.swift in Sources */,
+				7018DA5A2A57577800D5AC9C /* DefaultNetworkService.swift in Sources */,
+				7018DA5E2A57630300D5AC9C /* NetworkingErrors.swift in Sources */,
 				708135172A40FDD600A7D61C /* UIStackView+addArrangedSubviews().swift in Sources */,
 				70284C5F2A4439C5007207D4 /* SectionStackView.swift in Sources */,
+				7018DA582A57573A00D5AC9C /* URLSession.swift in Sources */,
 				70284C5B2A4434B0007207D4 /* DeadlineSwitch.swift in Sources */,
+				7018DA5C2A5758A200D5AC9C /* HTTPResponse.swift in Sources */,
 				70A061292A44AF0F001603FF /* DeadlineDatePicker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
