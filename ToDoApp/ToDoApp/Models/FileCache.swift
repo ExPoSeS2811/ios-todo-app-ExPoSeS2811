@@ -16,6 +16,7 @@ enum FileCacheErrors: Error {
 
 final class FileCache {
     var tasks: [String: TodoItem] = [:]
+    var isDirty: Bool = false
     
     private let csv = ".csv"
     private let json = ".json"
@@ -32,7 +33,7 @@ final class FileCache {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             throw FileCacheErrors.systemDirectoryNotFound
         }
-        
+        print(documentsDirectory)
         let fileURL = documentsDirectory.appendingPathComponent("\(file)\(json)")
         let jsonData = tasks.map { $1.json }
         let data = try JSONSerialization.data(withJSONObject: jsonData)

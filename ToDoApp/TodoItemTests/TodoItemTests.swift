@@ -14,7 +14,7 @@ final class TodoItemTests: XCTestCase {
     func test_init_setupWithDefaultValues() {
         // Given
         let text = "First homework from yandex"
-        let importance = Importance.high
+        let importance = Importance.important
         
         // When
         let sut = TodoItem(text: text, importance: importance)
@@ -120,7 +120,7 @@ final class TodoItemTests: XCTestCase {
         XCTAssertNotNil(parsedItem)
         XCTAssertEqual(parsedItem?.id, json["id"] as? String)
         XCTAssertEqual(parsedItem?.text, json["text"] as? String)
-        XCTAssertEqual(parsedItem?.importance, .normal)
+        XCTAssertEqual(parsedItem?.importance, .basic)
         XCTAssertEqual(parsedItem?.deadline, deadline)
         XCTAssertEqual(parsedItem?.isDone, json["isDone"] as? Bool)
         XCTAssertEqual(parsedItem?.createdAt, createdAt)
@@ -220,7 +220,7 @@ final class TodoItemTests: XCTestCase {
         
         let sut = TodoItem(id: "120242856_eq",
                            text: "Clear a desktop",
-                           importance: .normal,
+                           importance: .basic,
                            deadline: deadline,
                            isDone: true,
                            createdAt: createdAt)
@@ -241,7 +241,7 @@ final class TodoItemTests: XCTestCase {
     func test_parse_FromCSVWithDefaultValues() {
         let id = "RIQKADURQLQ-32JKWI-2"
         let text = "Prepare the floor"
-        let importance = Importance.high
+        let importance = Importance.important
         let createdAt = Date(timeIntervalSince1970: TimeInterval(1686522045))
         
         let csv = "\(id);\(text);\(importance.rawValue);;;\(Int(createdAt.timeIntervalSince1970));"
@@ -260,7 +260,7 @@ final class TodoItemTests: XCTestCase {
     func test_parse_FromCSVWithAllValues() {
         let id = "12345"
         let text = "Complete project tasks"
-        let importance = Importance.high
+        let importance = Importance.important
         let deadline = Date(timeIntervalSince1970: TimeInterval(1679091200))
         let isDone = true
         let createdAt = Date(timeIntervalSince1970: TimeInterval(1679004800))
@@ -292,7 +292,7 @@ final class TodoItemTests: XCTestCase {
         XCTAssertNotNil(parsedItem)
         XCTAssertEqual(parsedItem?.id, id)
         XCTAssertEqual(parsedItem?.text, text)
-        XCTAssertEqual(parsedItem?.importance, .normal)
+        XCTAssertEqual(parsedItem?.importance, .basic)
         XCTAssertEqual(parsedItem?.deadline, deadline)
         XCTAssertEqual(parsedItem?.isDone, isDone)
         XCTAssertEqual(parsedItem?.createdAt, createdAt)
@@ -326,7 +326,7 @@ final class TodoItemTests: XCTestCase {
         let sut1 = TodoItem(
             id: "Source#1",
             text: "Submit expense report",
-            importance: .high,
+            importance: .important,
             createdAt: Date(timeIntervalSince1970: 1687300000)
         )
         let sut2 = TodoItem(
@@ -347,7 +347,7 @@ final class TodoItemTests: XCTestCase {
         let sut1 = TodoItem(
             id: "SourcePriority#1",
             text: "Clear a desktop",
-            importance: .normal,
+            importance: .basic,
             deadline: Date(timeIntervalSince1970: TimeInterval(12686522045)),
             isDone: true,
             createdAt: Date(timeIntervalSince1970: 1686846432),

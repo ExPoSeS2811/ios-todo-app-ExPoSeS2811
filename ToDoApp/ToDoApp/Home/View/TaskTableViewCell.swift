@@ -157,10 +157,10 @@ class TaskTableViewCell: UITableViewCell {
             deadlineLabel.text = deadline.configureDate(format: "d MMMM")
         }
         
-        if item.importance == .high || item.importance == .low {
+        if item.importance == .important || item.importance == .low {
             importanceImageView.isHidden = false
-            importanceImageView.image = item.importance == .high ? .high : .low
-            item.importance == .high && !item.isDone ? statusButton.setImage(State.critical.image, for: .normal) : statusButton.setImage(State.normal.image, for: .normal)
+            importanceImageView.image = item.importance == .important ? .high : .low
+            item.importance == .important && !item.isDone ? statusButton.setImage(State.critical.image, for: .normal) : statusButton.setImage(State.normal.image, for: .normal)
         }
         
         if item.isDone {
@@ -172,6 +172,7 @@ class TaskTableViewCell: UITableViewCell {
                 NSAttributedString.Key.foregroundColor: UIColor.tertiaryLabel,
             ])
             descriptionTaskLabel.attributedText = attributedString
+            deadlineTaskStackView.isHidden = true
         }
         
         if let textColor = item.textColor,

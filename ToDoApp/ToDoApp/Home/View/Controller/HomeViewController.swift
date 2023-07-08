@@ -80,6 +80,27 @@ class HomeViewController: UIViewController {
         tasksTableView.register(CreateTaskTableViewCell.self, forCellReuseIdentifier: "CreateTaskTableViewCell")
         setupUI()
         homeViewModel.loadData()
+        
+        homeViewModel.networking.makeRequest(completion: { result in
+            DispatchQueue.main.async {
+                self.handleResponse(result)
+            }
+        })
+    }
+    
+    private func handleResponse(_ result: Result<[TodoItem], Error>) {
+        switch result {
+        case .success(let items):
+            homeViewModel.items = items
+            homeViewModel.saveData()
+        case .failure(let error):
+            // TODO: Show alert with error
+            print("error")
+        }
+    }
+    
+    private func updateTable() {
+        
     }
     
     init(viewModel: HomeViewModel) {
@@ -139,7 +160,7 @@ class HomeViewController: UIViewController {
             }
         }
     }
-    
+        
     private func setupNavigationBar() {
         title = "Мои дела"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -152,6 +173,7 @@ class HomeViewController: UIViewController {
     }
     
     // MARK: - Objc methods
+
     @objc func createNewItem() {
         let vc = DetailViewController(currentItem: nil)
         let navController = UINavigationController(rootViewController: vc)
@@ -160,6 +182,10 @@ class HomeViewController: UIViewController {
             if let item = item {
                 homeViewModel.items.append(item)
                 homeViewModel.saveData()
+                homeViewModel.networking.makeRequest(with: .post(item), completion: { result in
+                    // TODO: Relalize to check with isDirty
+                    print("change is dirty")
+                })
             }
         }
     }
@@ -174,6 +200,38 @@ class HomeViewController: UIViewController {
 extension HomeViewController: TaskTableViewCellDelegate {
     func didEditingStatusButton(source: UIButton) {
         homeViewModel.items[source.tag].isDone.toggle()
+        homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[source.tag].id, homeViewModel.items[source.tag])) { result in
+            print("isDirty")
+        }
         homeViewModel.saveData()
+        
+//        if !self.homeViewModel.fileCache.isDirty {
+//            homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[source.tag].id, homeViewModel.items[source.tag]), completion: { result in
+//                DispatchQueue.main.async {
+//                    print(self.homeViewModel.fileCache.isDirty)
+//                    switch result {
+//                    case .success(let items):
+//                        self.homeViewModel.fileCache.isDirty = false
+//                    case .failure(let error):
+//                        self.homeViewModel.fileCache.isDirty = true
+//                    }
+//                    print("is dirty need to realize")
+//                }
+//            })
+//        } else {
+//            self.homeViewModel.networking.makeRequest(with: .patch(homeViewModel.items)) { result in
+//                DispatchQueue.main.async {
+//                    print(self.homeViewModel.fileCache.isDirty = false)
+//                    switch result {
+//                    case .success(let items):
+//                        self.homeViewModel.fileCache.isDirty = false
+//                        self.homeViewModel.items = Array(items).sorted { $0.createdAt < $1.createdAt }
+//                        self.homeViewModel.saveData()
+//                    case .failure(let error):
+//                        self.homeViewModel.fileCache.isDirty = true
+//                    }
+//                }
+//            }
+//        }
     }
 }
