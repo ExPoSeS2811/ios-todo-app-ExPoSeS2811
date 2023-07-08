@@ -30,6 +30,9 @@ class HomeViewModel: HomeViewModelProtocol {
         }
     }
     
+    var networking: DefaultNetworkService = DefaultNetworkService()
+
+    
     var items: [TodoItem] = [] {
         didSet {
             updateCompletedTasksCount?(fileCache.tasks.values.filter { $0.isDone }.count)
@@ -75,8 +78,8 @@ class HomeViewModel: HomeViewModelProtocol {
     func saveData() {
         items.forEach { fileCache.add(newTask: $0) }
         switch stateVisibility {
-        case .hideCompleted: items = Array(fileCache.tasks.values).filter { !$0.isDone }.sorted { $0.createdAt < $1.createdAt }
-        case .showCompleted: items = Array(fileCache.tasks.values).sorted { $0.createdAt < $1.createdAt }
+        case .hideCompleted: items = Array(fileCache.tasks.values).filter { !$0.isDone }.sorted { $0.createdAt > $1.createdAt }
+        case .showCompleted: items = Array(fileCache.tasks.values).sorted { $0.createdAt > $1.createdAt }
         }
                 
         do {

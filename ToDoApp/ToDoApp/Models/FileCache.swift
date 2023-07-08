@@ -16,6 +16,7 @@ enum FileCacheErrors: Error {
 
 final class FileCache {
     var tasks: [String: TodoItem] = [:]
+    var isDirty: Bool = false
     
     private let csv = ".csv"
     private let json = ".json"

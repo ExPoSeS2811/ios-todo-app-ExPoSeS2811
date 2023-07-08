@@ -7,22 +7,23 @@
 
 import UIKit
 
-//extension URLSession {
-//    func dataTask(for urlRequest: URLRequest, completion: @escaping @Sendable (Result<(Data, URLResponse), Error>) -> Void) {
-//        let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
-//            if let error = error {
-//                completion(.failure(error))
-//                return
-//            }
-//
-//            guard let data = data, let response = response else {
-//                let error = NSError(domain: "URLSession", code: 0, userInfo: [NSLocalizedDescriptionKey: "No response or data received"])
-//                completion(.failure(error))
-//                return
-//            }
-//
-//            completion(.success((data, response)))
-//        }
-//        task.resume()
-//    }
-//}
+extension URLSession {
+    func dataTask(for request: URLRequest) async throws -> (Data, URLResponse) {
+        return try await withCheckedThrowingContinuation { continuation in
+            let task = self.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                }
+                if let data = data, let response = response {
+                    continuation.resume(returning: (data, response))
+                }
+            }
+            
+            if Task.isCancelled {
+                task.cancel()
+            } else {
+                task.resume()
+            }
+        }
+    }
+}

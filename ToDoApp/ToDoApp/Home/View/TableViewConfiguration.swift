@@ -38,12 +38,12 @@ extension HomeViewController: UITableViewDelegate {
                 if let item = item {
                     homeViewModel.items[indexPath.row] = item
                     homeViewModel.saveData()
-                    networking.makeRequest(with: .put(item.id, item), completion: { result in
+                    homeViewModel.networking.makeRequest(with: .put(item.id, item), completion: { result in
                         // TODO: Realization isDirty
                         print("is dirty need to realize")
                     })
                 } else {
-                    networking.makeRequest(with: .delete(homeViewModel.items[indexPath.row].id), completion: { result in
+                    homeViewModel.networking.makeRequest(with: .delete(homeViewModel.items[indexPath.row].id), completion: { result in
                         // TODO: Realization isDirty
                         print("is dirty need to realize")
                     })
@@ -62,7 +62,7 @@ extension HomeViewController: UITableViewDelegate {
         let markAsDoneAction = UIContextualAction(style: .normal, title: "Done") { [weak self] _, _, completionHandler in
             guard let self = self else { return }
             homeViewModel.items[indexPath.row].isDone.toggle()
-            networking.makeRequest(with: .put(homeViewModel.items[indexPath.row].id, homeViewModel.items[indexPath.row]), completion: { result in
+            homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[indexPath.row].id, homeViewModel.items[indexPath.row]), completion: { result in
                 // TODO: Realization isDirty
                 print("is dirty need to realize")
             })
@@ -88,7 +88,7 @@ extension HomeViewController: UITableViewDelegate {
         
         let deleteAction = UIContextualAction(style: .normal, title: "Done") { [weak self] _, _, _ in
             guard let self = self else { return }
-            networking.makeRequest(with: .delete(homeViewModel.items[indexPath.row].id), completion: { result in
+            homeViewModel.networking.makeRequest(with: .delete(homeViewModel.items[indexPath.row].id), completion: { result in
                 // TODO: Realization isDirty
                 print("is dirty need to realize")
             })

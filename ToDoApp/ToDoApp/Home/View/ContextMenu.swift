@@ -18,7 +18,7 @@ extension HomeViewController {
             menuItem1 = UIAction(title: "Mark As Done") { [weak self] _ in
                 guard let self = self else { return }
                 homeViewModel.items[indexPath.row].isDone = true
-                networking.makeRequest(with: .put(homeViewModel.items[indexPath.row].id, homeViewModel.items[indexPath.row]), completion: { result in
+                homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[indexPath.row].id, homeViewModel.items[indexPath.row]), completion: { result in
                     // TODO: Realization isDirty
                     print("is dirty need to realize")
                 })
@@ -30,7 +30,7 @@ extension HomeViewController {
             menuItem1 = UIAction(title: "Mark As Undone") { [weak self] _ in
                 guard let self = self else { return }
                 homeViewModel.items[indexPath.row].isDone = false
-                networking.makeRequest(with: .put(homeViewModel.items[indexPath.row].id, homeViewModel.items[indexPath.row]), completion: { result in
+                homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[indexPath.row].id, homeViewModel.items[indexPath.row]), completion: { result in
                     // TODO: Realization isDirty
                     print("is dirty need to realize")
                 })
@@ -42,7 +42,7 @@ extension HomeViewController {
         
         let deleteItem = UIAction(title: "Delete") { [weak self] _ in
             guard let self = self else { return }
-            networking.makeRequest(with: .delete(homeViewModel.items[indexPath.row].id), completion: { result in
+            homeViewModel.networking.makeRequest(with: .delete(homeViewModel.items[indexPath.row].id), completion: { result in
                 // TODO: Realization isDirty
                 print("is dirty need to realize")
             })
