@@ -71,7 +71,7 @@ class HomeViewController: UIViewController {
     // MARK: Properties
 
     var homeViewModel: HomeViewModel
-    var networking: DefaultNetworkService? = nil
+    var networking: DefaultNetworkService = DefaultNetworkService()
 
 
     // MARK: - Life cycle
@@ -83,7 +83,25 @@ class HomeViewController: UIViewController {
         setupUI()
         homeViewModel.loadData()
         
-        networking = DefaultNetworkService()
+        networking.makeRequest(completion: { result in
+            DispatchQueue.main.async {
+                self.handleResponse(result)
+            }
+        })
+    }
+    
+    private func handleResponse(_ result: Result<[TodoItem], Error>) {
+        switch result {
+        case .success(let items):
+            homeViewModel.items = items
+            homeViewModel.saveData()
+        case .failure(let error):
+            // TODO: Show alert with error
+            print("error")
+        }
+    }
+    
+    private func updateTable() {
         
     }
     
@@ -156,17 +174,6 @@ class HomeViewController: UIViewController {
         navigationController?.navigationBar.largeTitleTextAttributes = titleAttributes
     }
     
-    private func handleResponse(_ result: Result<[TodoItem], Error>) {
-        switch result {
-        case .success(let items):
-            homeViewModel.items = items
-            homeViewModel.saveData()
-        case .failure(let error):
-            // TODO: Show alert with error
-            print("error")
-        }
-    }
-    
     // MARK: - Objc methods
 
     @objc func createNewItem() {
@@ -177,7 +184,7 @@ class HomeViewController: UIViewController {
             if let item = item {
                 homeViewModel.items.append(item)
                 homeViewModel.saveData()
-                networking?.makeRequest(with: .post(item), completion: { result in
+                networking.makeRequest(with: .post(item), completion: { result in
                     // TODO: Relalize to check with isDirty
                     print("change is dirty")
                 })
@@ -195,6 +202,10 @@ class HomeViewController: UIViewController {
 extension HomeViewController: TaskTableViewCellDelegate {
     func didEditingStatusButton(source: UIButton) {
         homeViewModel.items[source.tag].isDone.toggle()
+        networking.makeRequest(with: .put(homeViewModel.items[source.tag].id, homeViewModel.items[source.tag]), completion: { result in
+            // TODO: Realization isDirty
+            print("is dirty need to realize")
+        })
         homeViewModel.saveData()
     }
 }

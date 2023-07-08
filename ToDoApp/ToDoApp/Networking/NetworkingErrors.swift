@@ -9,4 +9,6 @@ import Foundation
 
 enum NetworkingError: Error {
     case incorrectURL
+    case incorrectData
+    case parseFailed
 }

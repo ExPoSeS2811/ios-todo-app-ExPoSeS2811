@@ -31,71 +31,47 @@ class DefaultNetworkService: NetworkService {
         header["X-Last-Known-Revision"] = String(DefaultNetworkService.revision)
         switch selectedResponse {
         case .get:
-            return HTTPResponse(path: "/todobackend/list", header: header)
+            return HTTPResponse(header: header)
         case .post(let item):
             return HTTPResponse(
-                path: "/todobackend/list",
                 header: header,
                 httpMethod: .post(item),
                 httpBody: try? JSONSerialization.data(withJSONObject: ["element": item.json], options: [])
             )
         case .patch(let items):
             return HTTPResponse(
-                path: "/todobackend/list",
                 header: header,
                 httpMethod: .patch(items),
                 httpBody: try? JSONSerialization.data(withJSONObject: ["list": items.map { $0.json }])
             )
         case .delete(let id):
             return HTTPResponse(
-                path: "/todobackend/list/\(id)",
+                path: "/\(id)",
                 header: header,
                 httpMethod: .delete(id)
             )
         case .put(let id, let item):
             return HTTPResponse(
-                path: "/todobackend/list/\(id)",
+                path: "/\(id)",
                 header: header,
                 httpMethod: .put(id, item),
                 httpBody: try? JSONSerialization.data(withJSONObject: ["element": item.json], options: [])
             )
         case .getElement(let id):
             return HTTPResponse(
-                path: "/todobackend/list/\(id)",
+                path: "/\(id)",
                 header: header,
                 httpMethod: .getElement(id)
             )
         }
     }
-    
-    func getList(completion: @escaping (Result<[TodoItem], Error>) -> ()) {
-        self.httpResponse = configureResponse(selectedResponse: .get)
-        httpResponse?.performListRequest(completion: completion)
-    }
-    
-    func postElementItem(item: TodoItem, completion: @escaping (Result<TodoItem, Error>) -> ()) {
-        self.httpResponse = configureResponse(selectedResponse: .post(item))
-        httpResponse?.performElementRequest(completion: completion)
-    }
-    
-    func getElementItem(id: String, completion: @escaping (Result<TodoItem, Error>) -> ()) {
-        self.httpResponse = configureResponse(selectedResponse: .getElement(id))
-        httpResponse?.performElementRequest(completion: completion)
-    }
-    
-    func patchList(items: [TodoItem], completion: @escaping (Result<[TodoItem], Error>) -> ()) {
-        self.httpResponse = configureResponse(selectedResponse: .patch(items))
-        httpResponse?.performListRequest(completion: completion)
-    }
-    
-    func putElementItem(id: String, item: TodoItem, completion: @escaping (Result<TodoItem, Error>) -> ()) {
-        self.httpResponse = configureResponse(selectedResponse: .put(id, item))
-        httpResponse?.performElementRequest(completion: completion)
-    }
-    
-    func deleteElementItem(id: String, completion: @escaping (Result<TodoItem, Error>) -> ()) {
-        self.httpResponse = configureResponse(selectedResponse: .delete(id))
-        httpResponse?.performElementRequest(completion: completion)
+
+    func makeRequest(with response: MethodHttp = .get, completion: @escaping (Result<[TodoItem], Error>) -> ()) {
+        self.httpResponse = configureResponse(selectedResponse: response)
+        httpResponse?.updateRevision = { value in
+            DefaultNetworkService.revision = value
+        }
+        httpResponse?.getResponse(completion: completion)
     }
 }
 

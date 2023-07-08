@@ -11,7 +11,6 @@
 		7018DA5A2A57577800D5AC9C /* DefaultNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA592A57577800D5AC9C /* DefaultNetworkService.swift */; };
 		7018DA5C2A5758A200D5AC9C /* HTTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA5B2A5758A200D5AC9C /* HTTPResponse.swift */; };
 		7018DA5E2A57630300D5AC9C /* NetworkingErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA5D2A57630300D5AC9C /* NetworkingErrors.swift */; };
-		7018DA662A5898AA00D5AC9C /* Revision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA652A5898AA00D5AC9C /* Revision.swift */; };
 		70284C592A442CF8007207D4 /* DescriptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70284C582A442CF8007207D4 /* DescriptionTextView.swift */; };
 		70284C5B2A4434B0007207D4 /* DeadlineSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70284C5A2A4434B0007207D4 /* DeadlineSwitch.swift */; };
 		70284C5D2A4436E8007207D4 /* ImportanceSegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70284C5C2A4436E8007207D4 /* ImportanceSegmentControl.swift */; };
@@ -59,7 +58,6 @@
 		7018DA592A57577800D5AC9C /* DefaultNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkService.swift; sourceTree = "<group>"; };
 		7018DA5B2A5758A200D5AC9C /* HTTPResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPResponse.swift; sourceTree = "<group>"; };
 		7018DA5D2A57630300D5AC9C /* NetworkingErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingErrors.swift; sourceTree = "<group>"; };
-		7018DA652A5898AA00D5AC9C /* Revision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Revision.swift; sourceTree = "<group>"; };
 		70284C582A442CF8007207D4 /* DescriptionTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionTextView.swift; sourceTree = "<group>"; };
 		70284C5A2A4434B0007207D4 /* DeadlineSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadlineSwitch.swift; sourceTree = "<group>"; };
 		70284C5C2A4436E8007207D4 /* ImportanceSegmentControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportanceSegmentControl.swift; sourceTree = "<group>"; };
@@ -118,7 +116,6 @@
 			children = (
 				7018DA572A57573A00D5AC9C /* URLSession.swift */,
 				7018DA592A57577800D5AC9C /* DefaultNetworkService.swift */,
-				7018DA652A5898AA00D5AC9C /* Revision.swift */,
 				7018DA5B2A5758A200D5AC9C /* HTTPResponse.swift */,
 				7018DA5D2A57630300D5AC9C /* NetworkingErrors.swift */,
 			);
@@ -389,7 +386,6 @@
 				70D1797D2A5501FD0003830D /* HomeViewModel.swift in Sources */,
 				70284C5D2A4436E8007207D4 /* ImportanceSegmentControl.swift in Sources */,
 				70F1AA4C2A46273400303B7C /* ColorPicker.swift in Sources */,
-				7018DA662A5898AA00D5AC9C /* Revision.swift in Sources */,
 				70284C612A443E93007207D4 /* UIFont+static.swift in Sources */,
 				706E176F2A3C7C56007A77B3 /* DetailViewController.swift in Sources */,
 				70A0612B2A44B779001603FF /* DeleteButton.swift in Sources */,

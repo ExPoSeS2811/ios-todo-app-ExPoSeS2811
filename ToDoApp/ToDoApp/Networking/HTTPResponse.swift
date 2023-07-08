@@ -8,15 +8,15 @@
 import Foundation
 
 class HTTPResponse {
-    let httpMethod: MethodHttp
+    private let httpMethod: MethodHttp
     private let path: String
     private let header: [String: String]
     private let httpBody: Data?
     var updateRevision: ((Int) -> ())?
     
-    init(path: String, header: [String: String], httpMethod: MethodHttp = .get, httpBody: Data? = nil) {
+    init(path: String = "", header: [String: String], httpMethod: MethodHttp = .get, httpBody: Data? = nil) {
         self.httpMethod = httpMethod
-        self.path = path
+        self.path = "/todobackend/list" + path
         self.header = header
         self.httpBody = httpBody
     }
@@ -38,77 +38,87 @@ class HTTPResponse {
         let url = try makeUrl()
         
         var request = URLRequest(url: url, timeoutInterval: 60.0)
-        request.httpMethod = httpMethod.rawValue
+        request.httpMethod = httpMethod.rawValue.uppercased()
         request.httpBody = httpBody
         header.forEach { request.addValue($1, forHTTPHeaderField: $0) }
 
         return request
     }
     
-    func performListRequest(completion: @escaping (Result<[TodoItem], Error>) -> ()) {
+    func getResponse(completion: @escaping (Result<[TodoItem], Error>) -> ()) {
         do {
             let request = try configureURLRequest()
+            switch httpMethod {
+            case .get, .patch:
+                performListRequest(request: request, completion: completion)
+            case .post, .delete, .put, .getElement:
+                performElementRequest(request: request, completion: completion)
+            }
         } catch {
             completion(.failure(error))
         }
-        
+    }
+    
+    private func performListRequest(request: URLRequest, completion: @escaping (Result<[TodoItem], Error>) -> ()) {
         let session = URLSession.shared.dataTask(with: request) { data, req, error in
             print(req)
 
             if let error = error {
                 completion(.failure(error))
-            } else if let data = data {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data)
-                    if let jsn = json as? [String: Any] {
-                        if let revision = jsn["revision"] as? Int {
-                            self.updateRevision?(revision)
-                        }
-                        if let list = jsn["list"] as? [Any] {
-                            completion(.success(list.compactMap { TodoItem.parse(json: $0) }))
-                        }
+                return
+            }
+            guard let data = data else {
+                completion(.failure(NetworkingError.incorrectData))
+                return
+            }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data)
+                if let jsn = json as? [String: Any] {
+                    if let revision = jsn["revision"] as? Int {
+                        self.updateRevision?(revision)
                     }
-                } catch let decodeError {
-                    print(decodeError)
+                    if let list = jsn["list"] as? [Any] {
+                        completion(.success(list.compactMap { TodoItem.parse(json: $0) }))
+                    }
+                } else {
+                    completion(.failure(NetworkingError.parseFailed))
                 }
+            } catch let decodeError {
+                completion(.failure(decodeError))
             }
         }
         
         session.resume()
     }
     
-    func performElementRequest(completion: @escaping (Result<TodoItem, Error>) -> ()) {
-        do {
-            let request = try configureURLRequest()
-        } catch {
-            completion(.failure(error))
-        }
-        
+    private func performElementRequest(request: URLRequest, completion: @escaping (Result<[TodoItem], Error>) -> ()) {
         let session = URLSession.shared.dataTask(with: request) { data, req, error in
             print(req)
             
             if let error = error {
                 completion(.failure(error))
-            } else if let data = data {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data)
-                    if let jsn = json as? [String: Any] {
-                        if let revision = jsn["revision"] as? Int {
-                            self.updateRevision?(revision)
-                        }
-                        if let element = jsn["element"] {
-                            guard let parsedItem = TodoItem.parse(json: element) else { return }
-                            completion(.success(parsedItem))
-                        }
+                return
+            }
+            guard let data = data else {
+                completion(.failure(NetworkingError.incorrectData))
+                return
+            }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data)
+                if let jsn = json as? [String: Any] {
+                    if let revision = jsn["revision"] as? Int {
+                        self.updateRevision?(revision)
                     }
-
-                } catch let decodeError {
-                    print(decodeError)
+                    if let list = jsn["element"] as? [Any] {
+                        completion(.success(list.compactMap { TodoItem.parse(json: $0) }))
+                    }
+                } else {
+                    completion(.failure(NetworkingError.parseFailed))
                 }
+            } catch let decodeError {
+                completion(.failure(decodeError))
             }
         }
-        
         session.resume()
     }
 }
-
