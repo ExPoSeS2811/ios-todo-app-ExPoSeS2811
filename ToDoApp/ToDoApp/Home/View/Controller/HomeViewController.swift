@@ -201,8 +201,9 @@ extension HomeViewController: TaskTableViewCellDelegate {
     func didEditingStatusButton(source: UIButton) {
         homeViewModel.items[source.tag].isDone.toggle()
         homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[source.tag].id, homeViewModel.items[source.tag])) { result in
-            print("isDirty")    
+            print("isDirty")
         }
+        homeViewModel.saveData()
         
 //        if !self.homeViewModel.fileCache.isDirty {
 //            homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[source.tag].id, homeViewModel.items[source.tag]), completion: { result in
