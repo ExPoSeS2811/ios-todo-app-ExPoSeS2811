@@ -58,7 +58,7 @@ class HomeViewModel: HomeViewModelProtocol {
     
     func loadData() {
         do {
-            try fileCache.loadJSON(from: "storage_json")
+            try fileCache.load()
             stateVisibility = .hideCompleted
             updateCompletedTasksCount?(fileCache.tasks.values.filter { $0.isDone }.count)
             
@@ -82,7 +82,7 @@ class HomeViewModel: HomeViewModelProtocol {
         }
                 
         do {
-            try fileCache.saveJSON(to: "storage_json")
+            try fileCache.save()
         } catch let error as FileCacheErrors {
             switch error {
             case .parsingError:
