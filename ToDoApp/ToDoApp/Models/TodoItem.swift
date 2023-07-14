@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SQLite
+import CoreData
 
 enum Importance: String, CaseIterable {
     case low, basic, important
@@ -20,7 +22,7 @@ struct TodoItem {
     let createdAt: Date
     let changedAt: Date?
     let textColor: String?
-    
+
     init(
         id: String = UUID().uuidString,
         text: String,
@@ -49,13 +51,13 @@ extension TodoItem {
               let text = jsn[Keys.text.rawValue] as? String,
               let createdAt = (jsn[Keys.created_at.rawValue] as? Int).flatMap({ Date(timeIntervalSince1970: TimeInterval($0)) })
         else { return nil }
-        
+
         let importance = (jsn[Keys.importance.rawValue] as? String).flatMap { Importance(rawValue: $0) } ?? .basic
         let deadline = (jsn[Keys.deadline.rawValue] as? Int).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
         let isDone = jsn[Keys.done.rawValue] as? Bool ?? false
         let changedAt = (jsn[Keys.changed_at.rawValue] as? Int).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
         let textColor = jsn[Keys.color.rawValue] as? String
-        
+
         return TodoItem(
             id: id,
             text: text,
@@ -67,10 +69,10 @@ extension TodoItem {
             textColor: textColor
         )
     }
-    
+
     var json: Any {
         var res: [String: Any] = [:]
-        
+
         res[Keys.id.rawValue] = id
         res[Keys.text.rawValue] = text
         res[Keys.importance.rawValue] = importance.rawValue
@@ -90,40 +92,66 @@ extension TodoItem {
 }
 
 extension TodoItem {
-    static func parse(csv: String) -> TodoItem? {
-        let columns = csv.components(separatedBy: ";")
-        guard !columns[0].isEmpty,
-              !columns[1].isEmpty,
-              let createdAt = Int(columns[5]).flatMap({ Date(timeIntervalSince1970: TimeInterval($0)) }) else { return nil }
-        let id = columns[0]
-        let text = columns[1]
-        let importance = Importance(rawValue: columns[2]) ?? .basic
-        
-        let deadline = Int(columns[3]).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
-        let isDone = Bool(columns[4]) ?? false
-        let changedAt = Int(columns[6]).flatMap { Date(timeIntervalSince1970: TimeInterval($0)) }
-        let textColor = columns[7]
-        
+    static func parse(row: Row) -> TodoItem? {
+        guard let id = try? row.get(Expression<String>("id")),
+              let text = try? row.get(Expression<String>("text")),
+              let importanceRawValue = try? row.get(Expression<String>("importance")),
+              let importance = Importance(rawValue: importanceRawValue),
+              let createdAtString = try? row.get(Expression<String>("created_at")),
+              let createdAt = dateFormatter.date(from: createdAtString)
+        else {
+            return nil
+        }
+
+        let deadlineString = try? row.get(Expression<String?>("deadline"))
+        let deadline = deadlineString.flatMap { dateFormatter.date(from: $0) }
+
+        let isDone = try? row.get(Expression<Bool>("is_done"))
+
+        let changedAtString = try? row.get(Expression<String?>("changed_at"))
+        let changedAt = changedAtString.flatMap { dateFormatter.date(from: $0) }
+
+        let textColor = try? row.get(Expression<String?>("color"))
+
         return TodoItem(
             id: id,
             text: text,
             importance: importance,
             deadline: deadline,
-            isDone: isDone,
+            isDone: isDone ?? false,
             createdAt: createdAt,
             changedAt: changedAt,
             textColor: textColor
         )
     }
-    
-    var csv: String {
-        let deadlineString = deadline.flatMap { String(Int($0.timeIntervalSince1970)) } ?? ""
-        let changedAtString = changedAt.flatMap { String(Int($0.timeIntervalSince1970)) } ?? ""
-        let createdAtString = String(Int(createdAt.timeIntervalSince1970))
-        let importanceString = importance != .basic ? importance.rawValue : ""
-        let textColorString = textColor != nil ? textColor! : ""
-        
-        return "\(id);\(text);\(importanceString);\(deadlineString);\(isDone);\(createdAtString);\(changedAtString);\(textColorString)"
+
+    var sqlReplaceStatement: String {
+        let importanceValue = importance.rawValue
+        let deadlineString = deadline.map { dateFormatter.string(from: $0) } ?? "NULL"
+        let isDoneValue = isDone ? "1" : "0"
+        let createdAtString = dateFormatter.string(from: createdAt)
+        let changedAtString = changedAt.map { dateFormatter.string(from: $0) } ?? "NULL"
+        let textColorValue = textColor.map { "'\($0)'" } ?? "NULL"
+
+        return """
+        REPLACE INTO todo_items (id, text, importance, deadline, is_done, created_at, changed_at, color)
+        VALUES ('\(id)', '\(text)', '\(importanceValue)', '\(deadlineString)', \(isDoneValue), '\(createdAtString)', \(changedAtString), \(textColorValue));
+        """
+    }
+}
+
+extension TodoItem {
+    static func parse(entity: TodoItemEntity) -> TodoItem {
+        return TodoItem(
+            id: entity.id,
+            text: entity.text,
+            importance: Importance(rawValue: entity.importance) ?? .basic,
+            deadline: entity.deadline,
+            isDone: entity.isDone,
+            createdAt: entity.createdAt,
+            changedAt: entity.changedAt,
+            textColor: entity.textColor
+        )
     }
 }
 

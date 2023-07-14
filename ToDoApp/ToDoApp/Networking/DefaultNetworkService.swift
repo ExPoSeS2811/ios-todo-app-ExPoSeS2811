@@ -15,12 +15,8 @@ class DefaultNetworkService: NetworkService {
     var httpResponse: HTTPResponse?
 
     static var revision: Int {
-        get {
-            UserDefaults.standard.integer(forKey: "revision")
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey: "revision")
-        }
+        get { UserDefaults.standard.integer(forKey: "revision") }
+        set { UserDefaults.standard.setValue(newValue, forKey: "revision") }
     }
 
     private var header = [
@@ -29,6 +25,7 @@ class DefaultNetworkService: NetworkService {
 
     private func configureResponse(selectedResponse: MethodHttp) -> HTTPResponse {
         header["X-Last-Known-Revision"] = String(DefaultNetworkService.revision)
+        
         switch selectedResponse {
         case .get:
             return HTTPResponse(header: header)

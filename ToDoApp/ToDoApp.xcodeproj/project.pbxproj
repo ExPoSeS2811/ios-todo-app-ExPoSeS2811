@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70027A122A5CA59000860309 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 70027A112A5CA59000860309 /* SQLite */; };
 		7018DA582A57573A00D5AC9C /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA572A57573A00D5AC9C /* URLSession.swift */; };
 		7018DA5A2A57577800D5AC9C /* DefaultNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA592A57577800D5AC9C /* DefaultNetworkService.swift */; };
 		7018DA5C2A5758A200D5AC9C /* HTTPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018DA5B2A5758A200D5AC9C /* HTTPResponse.swift */; };
@@ -16,6 +17,12 @@
 		70284C5D2A4436E8007207D4 /* ImportanceSegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70284C5C2A4436E8007207D4 /* ImportanceSegmentControl.swift */; };
 		70284C5F2A4439C5007207D4 /* SectionStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70284C5E2A4439C5007207D4 /* SectionStackView.swift */; };
 		70284C612A443E93007207D4 /* UIFont+static.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70284C602A443E93007207D4 /* UIFont+static.swift */; };
+		70312C982A61212C00439A7C /* SQLDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70312C972A61212C00439A7C /* SQLDataManager.swift */; };
+		704025462A5D7E6A00E3BCD6 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704025452A5D7E6A00E3BCD6 /* StorageManager.swift */; };
+		7040254A2A5D81B900E3BCD6 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 704025482A5D81B900E3BCD6 /* Model.xcdatamodeld */; };
+		7040254D2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7040254B2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataClass.swift */; };
+		7040254E2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7040254C2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataProperties.swift */; };
+		704025502A5D85C200E3BCD6 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7040254F2A5D85C200E3BCD6 /* CoreDataManager.swift */; };
 		706E176B2A3C7C56007A77B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E176A2A3C7C56007A77B3 /* AppDelegate.swift */; };
 		706E176F2A3C7C56007A77B3 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706E176E2A3C7C56007A77B3 /* DetailViewController.swift */; };
 		706E17742A3C7C58007A77B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 706E17732A3C7C58007A77B3 /* Assets.xcassets */; };
@@ -63,6 +70,12 @@
 		70284C5C2A4436E8007207D4 /* ImportanceSegmentControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportanceSegmentControl.swift; sourceTree = "<group>"; };
 		70284C5E2A4439C5007207D4 /* SectionStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionStackView.swift; sourceTree = "<group>"; };
 		70284C602A443E93007207D4 /* UIFont+static.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+static.swift"; sourceTree = "<group>"; };
+		70312C972A61212C00439A7C /* SQLDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLDataManager.swift; sourceTree = "<group>"; };
+		704025452A5D7E6A00E3BCD6 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		704025492A5D81B900E3BCD6 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		7040254B2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodoItemEntity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7040254C2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodoItemEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7040254F2A5D85C200E3BCD6 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		706E17672A3C7C56007A77B3 /* ToDoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		706E176A2A3C7C56007A77B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		706E176E2A3C7C56007A77B3 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -98,6 +111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70027A122A5CA59000860309 /* SQLite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +134,16 @@
 				7018DA5D2A57630300D5AC9C /* NetworkingErrors.swift */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		704025472A5D819300E3BCD6 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				7040254B2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataClass.swift */,
+				7040254C2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataProperties.swift */,
+				704025482A5D81B900E3BCD6 /* Model.xcdatamodeld */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		7061EAAD2A4200C30083FCC5 /* Fonts */ = {
@@ -154,6 +178,7 @@
 		706E17692A3C7C56007A77B3 /* ToDoApp */ = {
 			isa = PBXGroup;
 			children = (
+				70CE1C5B2A6208A900CF67AC /* Storage */,
 				7018DA562A5755F300D5AC9C /* Networking */,
 				70B13D602A52014E00EB750B /* Home */,
 				70B13D632A52022700EB750B /* Detail */,
@@ -246,6 +271,17 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		70CE1C5B2A6208A900CF67AC /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				704025472A5D819300E3BCD6 /* CoreData */,
+				704025452A5D7E6A00E3BCD6 /* StorageManager.swift */,
+				7040254F2A5D85C200E3BCD6 /* CoreDataManager.swift */,
+				70312C972A61212C00439A7C /* SQLDataManager.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
 		70D1797E2A550D3E0003830D /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,6 +327,7 @@
 			);
 			name = ToDoApp;
 			packageProductDependencies = (
+				70027A112A5CA59000860309 /* SQLite */,
 			);
 			productName = ToDoApp;
 			productReference = 706E17672A3C7C56007A77B3 /* ToDoApp.app */;
@@ -343,6 +380,7 @@
 			);
 			mainGroup = 706E175E2A3C7C56007A77B3;
 			packageReferences = (
+				70027A102A5CA59000860309 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
 			);
 			productRefGroup = 706E17682A3C7C56007A77B3 /* Products */;
 			projectDirPath = "";
@@ -387,6 +425,7 @@
 				70284C5D2A4436E8007207D4 /* ImportanceSegmentControl.swift in Sources */,
 				70F1AA4C2A46273400303B7C /* ColorPicker.swift in Sources */,
 				70284C612A443E93007207D4 /* UIFont+static.swift in Sources */,
+				7040254D2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataClass.swift in Sources */,
 				706E176F2A3C7C56007A77B3 /* DetailViewController.swift in Sources */,
 				70A0612B2A44B779001603FF /* DeleteButton.swift in Sources */,
 				708135142A40FCE200A7D61C /* UIView+addSubviews().swift in Sources */,
@@ -395,6 +434,7 @@
 				70F1AA4E2A463C1D00303B7C /* UIColor+hex.swift in Sources */,
 				70B13D692A52093B00EB750B /* TableViewConfiguration.swift in Sources */,
 				70B13D672A52035600EB750B /* ContextMenu.swift in Sources */,
+				7040254E2A5D82FC00E3BCD6 /* TodoItemEntity+CoreDataProperties.swift in Sources */,
 				70D179822A5655EA0003830D /* Date+configureDate().swift in Sources */,
 				70A448E42A4B691300DB14E8 /* CreateTaskTableViewCell.swift in Sources */,
 				706E17812A3C7E44007A77B3 /* FileCache.swift in Sources */,
@@ -402,13 +442,17 @@
 				70A448E02A4B68CF00DB14E8 /* HomeViewController.swift in Sources */,
 				70E705132A4E07450011C2C5 /* Animation.swift in Sources */,
 				7018DA5A2A57577800D5AC9C /* DefaultNetworkService.swift in Sources */,
+				704025502A5D85C200E3BCD6 /* CoreDataManager.swift in Sources */,
+				704025462A5D7E6A00E3BCD6 /* StorageManager.swift in Sources */,
 				7018DA5E2A57630300D5AC9C /* NetworkingErrors.swift in Sources */,
 				708135172A40FDD600A7D61C /* UIStackView+addArrangedSubviews().swift in Sources */,
 				70284C5F2A4439C5007207D4 /* SectionStackView.swift in Sources */,
 				7018DA582A57573A00D5AC9C /* URLSession.swift in Sources */,
 				70284C5B2A4434B0007207D4 /* DeadlineSwitch.swift in Sources */,
+				70312C982A61212C00439A7C /* SQLDataManager.swift in Sources */,
 				7018DA5C2A5758A200D5AC9C /* HTTPResponse.swift in Sources */,
 				70A061292A44AF0F001603FF /* DeadlineDatePicker.swift in Sources */,
+				7040254A2A5D81B900E3BCD6 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -686,6 +730,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		70027A102A5CA59000860309 /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		70027A112A5CA59000860309 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70027A102A5CA59000860309 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		704025482A5D81B900E3BCD6 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				704025492A5D81B900E3BCD6 /* Model.xcdatamodel */,
+			);
+			currentVersion = 704025492A5D81B900E3BCD6 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 706E175F2A3C7C56007A77B3 /* Project object */;
 }

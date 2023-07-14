@@ -61,7 +61,6 @@ class HTTPResponse {
     
     private func performListRequest(request: URLRequest, completion: @escaping (Result<[TodoItem], Error>) -> ()) {
         let session = URLSession.shared.dataTask(with: request) { data, req, error in
-            print(req)
 
             if let error = error {
                 completion(.failure(error))
@@ -93,7 +92,6 @@ class HTTPResponse {
     
     private func performElementRequest(request: URLRequest, completion: @escaping (Result<[TodoItem], Error>) -> ()) {
         let session = URLSession.shared.dataTask(with: request) { data, req, error in
-            print(req)
             
             if let error = error {
                 completion(.failure(error))
