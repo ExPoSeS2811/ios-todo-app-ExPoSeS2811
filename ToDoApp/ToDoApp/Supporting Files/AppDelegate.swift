@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         if let window = window {
             let navigationController = UINavigationController()
-            let homeViewModel = HomeViewModel(fileCache: FileCache())
+            let homeViewModel = HomeViewModel(fileCache: FileCache(database: .sql))
             navigationController.viewControllers = [HomeViewController(viewModel: homeViewModel)]
             window.rootViewController = navigationController
             window.makeKeyAndVisible()

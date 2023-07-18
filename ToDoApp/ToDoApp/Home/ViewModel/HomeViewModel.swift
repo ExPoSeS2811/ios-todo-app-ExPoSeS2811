@@ -22,12 +22,8 @@ class HomeViewModel: HomeViewModelProtocol {
     var fileCache: FileCache
     var reloadData: (() -> Void)?
     var revision: Int {
-        get {
-            UserDefaults.standard.integer(forKey: "revision")
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey: "revision")
-        }
+        get { UserDefaults.standard.integer(forKey: "revision") }
+        set { UserDefaults.standard.setValue(newValue, forKey: "revision") }
     }
     
     var networking: DefaultNetworkService = .init()
@@ -100,6 +96,8 @@ class HomeViewModel: HomeViewModelProtocol {
     }
         
     func deleteItem(at index: Int) {
+        fileCache.delete(with: items[index].id
+)
         fileCache.remove(items.remove(at: index).id)
         saveData()
     }

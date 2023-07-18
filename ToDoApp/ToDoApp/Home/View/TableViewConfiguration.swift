@@ -37,6 +37,7 @@ extension HomeViewController: UITableViewDelegate {
             vc.completionHandler = { [self] item in
                 if let item = item {
                     homeViewModel.items[indexPath.row] = item
+                    homeViewModel.fileCache.update(item)
                     homeViewModel.saveData()
                     homeViewModel.networking.makeRequest(with: .put(item.id, item), completion: { result in
                         // TODO: Realization isDirty

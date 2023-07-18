@@ -116,7 +116,6 @@ final class SQLDataManager: StorageManager {
     func delete(with id: String) {
         let targetTask = todoItems.filter(self.id == id)
         let delete = targetTask.delete()
-
         do {
             try db?.run(delete)
         } catch {

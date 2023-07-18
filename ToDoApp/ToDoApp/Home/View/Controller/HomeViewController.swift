@@ -99,9 +99,7 @@ class HomeViewController: UIViewController {
         }
     }
     
-    private func updateTable() {
-        
-    }
+    private func updateTable() {}
     
     init(viewModel: HomeViewModel) {
         self.homeViewModel = viewModel
@@ -182,7 +180,7 @@ class HomeViewController: UIViewController {
             if let item = item {
                 homeViewModel.items.append(item)
                 homeViewModel.saveData()
-                homeViewModel.networking.makeRequest(with: .post(item), completion: { result in
+                homeViewModel.networking.makeRequest(with: .post(item), completion: { _ in
                     // TODO: Relalize to check with isDirty
                     print("change is dirty")
                 })
@@ -192,7 +190,9 @@ class HomeViewController: UIViewController {
 
     @objc private func toggleInvisibleCell() {
         homeViewModel.showCompletedTasks.toggle()
-        homeViewModel.showCompletedTasks ? homeViewModel.changeVisibility(to: .showCompleted) : homeViewModel.changeVisibility(to: .hideCompleted)
+        UIView.transition(with: tasksTableView, duration: 0.3, options: .transitionFlipFromLeft) {
+            self.homeViewModel.changeVisibility(to: self.homeViewModel.showCompletedTasks ? .showCompleted : .hideCompleted)
+        }
         statusInvisibleTask.setTitle(homeViewModel.showCompletedTasks ? "Скрыть" : "Показать", for: .normal)
     }
 }
@@ -200,7 +200,7 @@ class HomeViewController: UIViewController {
 extension HomeViewController: TaskTableViewCellDelegate {
     func didEditingStatusButton(source: UIButton) {
         homeViewModel.items[source.tag].isDone.toggle()
-        homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[source.tag].id, homeViewModel.items[source.tag])) { result in
+        homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[source.tag].id, homeViewModel.items[source.tag])) { _ in
             print("isDirty")
         }
         homeViewModel.saveData()
