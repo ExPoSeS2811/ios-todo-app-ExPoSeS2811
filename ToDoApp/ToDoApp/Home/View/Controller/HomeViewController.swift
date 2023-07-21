@@ -81,11 +81,11 @@ class HomeViewController: UIViewController {
         setupUI()
         homeViewModel.loadData()
         
-        homeViewModel.networking.makeRequest(completion: { result in
-            DispatchQueue.main.async {
-                self.handleResponse(result)
-            }
-        })
+//        homeViewModel.networking.makeRequest(completion: { result in
+//            DispatchQueue.main.async {
+//                self.handleResponse(result)
+//            }
+//        })
     }
     
     private func handleResponse(_ result: Result<[TodoItem], Error>) {
@@ -93,7 +93,7 @@ class HomeViewController: UIViewController {
         case .success(let items):
             homeViewModel.items = items
             homeViewModel.saveData()
-        case .failure(let error):
+        case .failure(_):
             // TODO: Show alert with error
             print("error")
         }
@@ -176,11 +176,11 @@ class HomeViewController: UIViewController {
         let vc = DetailViewController(currentItem: nil)
         let navController = UINavigationController(rootViewController: vc)
         present(navController, animated: true)
-        vc.completionHandler = { [self] item in
+        vc.completionHandler = { [weak self] item in
             if let item = item {
-                homeViewModel.items.append(item)
-                homeViewModel.saveData()
-                homeViewModel.networking.makeRequest(with: .post(item), completion: { _ in
+                self?.homeViewModel.items.append(item)
+                self?.homeViewModel.saveData(with: .insert(item))
+                self?.homeViewModel.networking.makeRequest(with: .post(item), completion: { _ in
                     // TODO: Relalize to check with isDirty
                     print("change is dirty")
                 })
@@ -203,35 +203,6 @@ extension HomeViewController: TaskTableViewCellDelegate {
         homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[source.tag].id, homeViewModel.items[source.tag])) { _ in
             print("isDirty")
         }
-        homeViewModel.saveData()
-        
-//        if !self.homeViewModel.fileCache.isDirty {
-//            homeViewModel.networking.makeRequest(with: .put(homeViewModel.items[source.tag].id, homeViewModel.items[source.tag]), completion: { result in
-//                DispatchQueue.main.async {
-//                    print(self.homeViewModel.fileCache.isDirty)
-//                    switch result {
-//                    case .success(let items):
-//                        self.homeViewModel.fileCache.isDirty = false
-//                    case .failure(let error):
-//                        self.homeViewModel.fileCache.isDirty = true
-//                    }
-//                    print("is dirty need to realize")
-//                }
-//            })
-//        } else {
-//            self.homeViewModel.networking.makeRequest(with: .patch(homeViewModel.items)) { result in
-//                DispatchQueue.main.async {
-//                    print(self.homeViewModel.fileCache.isDirty = false)
-//                    switch result {
-//                    case .success(let items):
-//                        self.homeViewModel.fileCache.isDirty = false
-//                        self.homeViewModel.items = Array(items).sorted { $0.createdAt < $1.createdAt }
-//                        self.homeViewModel.saveData()
-//                    case .failure(let error):
-//                        self.homeViewModel.fileCache.isDirty = true
-//                    }
-//                }
-//            }
-//        }
+        homeViewModel.saveData(with: .update(homeViewModel.items[source.tag]))
     }
 }

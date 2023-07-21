@@ -22,7 +22,7 @@ extension HomeViewController {
                     // TODO: Realization isDirty
                     print("is dirty need to realize")
                 })
-                homeViewModel.saveData()
+                homeViewModel.saveData(with: .update(homeViewModel.items[indexPath.row]))
             }
             
             menuItem1.image = UIImage(systemName: "checkmark.circle.fill")
@@ -34,7 +34,7 @@ extension HomeViewController {
                     // TODO: Realization isDirty
                     print("is dirty need to realize")
                 })
-                homeViewModel.saveData()
+                homeViewModel.saveData(with: .update(homeViewModel.items[indexPath.row]))
             }
             
             menuItem1.image = UIImage(systemName: "circle")
@@ -46,7 +46,7 @@ extension HomeViewController {
                 // TODO: Realization isDirty
                 print("is dirty need to realize")
             })
-            homeViewModel.deleteItem(at: indexPath.row)
+            homeViewModel.saveData(with: .delete(homeViewModel.items[indexPath.row].id))
         }
         
         let attributes: [NSAttributedString.Key: Any] = [
