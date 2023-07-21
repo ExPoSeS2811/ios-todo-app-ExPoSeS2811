@@ -37,8 +37,7 @@ extension HomeViewController: UITableViewDelegate {
             vc.completionHandler = { [self] item in
                 if let item = item {
                     homeViewModel.items[indexPath.row] = item
-                    homeViewModel.fileCache.update(item)
-                    homeViewModel.saveData()
+                    homeViewModel.saveData(with: .update(item))
                     homeViewModel.networking.makeRequest(with: .put(item.id, item), completion: { result in
                         // TODO: Realization isDirty
                         print("is dirty need to realize")
@@ -48,7 +47,7 @@ extension HomeViewController: UITableViewDelegate {
                         // TODO: Realization isDirty
                         print("is dirty need to realize")
                     })
-                    homeViewModel.deleteItem(at: indexPath.row)
+                    homeViewModel.saveData(with: .delete(homeViewModel.items[indexPath.row].id))
                 }
             }
         } else {
@@ -67,7 +66,7 @@ extension HomeViewController: UITableViewDelegate {
                 // TODO: Realization isDirty
                 print("is dirty need to realize")
             })
-            homeViewModel.saveData()
+            homeViewModel.saveData(with: .update(homeViewModel.items[indexPath.row]))
             completionHandler(true)
         }
         
@@ -87,13 +86,13 @@ extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard indexPath.row < homeViewModel.items.count else { return nil }
         
-        let deleteAction = UIContextualAction(style: .normal, title: "Done") { [weak self] _, _, _ in
+        let deleteAction = UIContextualAction(style: .normal, title: "Delete") { [weak self] _, _, _ in
             guard let self = self else { return }
             homeViewModel.networking.makeRequest(with: .delete(homeViewModel.items[indexPath.row].id), completion: { result in
                 // TODO: Realization isDirty
                 print("is dirty need to realize")
             })
-            homeViewModel.deleteItem(at: indexPath.row)
+            homeViewModel.saveData(with: .delete(homeViewModel.items[indexPath.row].id))
         }
         
         let image = UIImage(systemName: "trash.fill")

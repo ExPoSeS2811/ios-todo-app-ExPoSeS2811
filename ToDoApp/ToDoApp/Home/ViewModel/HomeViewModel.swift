@@ -70,7 +70,7 @@ class HomeViewModel: HomeViewModelProtocol {
         }
     }
     
-    func saveData() {
+    func saveData(with selected: OperationType = .save) {
         items.forEach { fileCache.add(newTask: $0) }
         switch stateVisibility {
         case .hideCompleted: items = Array(fileCache.tasks.values).filter { !$0.isDone }.sorted { $0.createdAt < $1.createdAt }
@@ -78,7 +78,18 @@ class HomeViewModel: HomeViewModelProtocol {
         }
                 
         do {
-            try fileCache.save()
+            switch selected {
+            case .insert(let item):
+                fileCache.insert(item)
+            case .update(let item):
+                fileCache.update(item)
+            case .delete(let id):
+                guard let indexDelete = items.firstIndex(where: { $0.id == id }) else { return }
+                fileCache.delete(with: items[indexDelete].id)
+                items.remove(at: indexDelete)
+            case .save:
+                try fileCache.save()
+            }
         } catch let error as FileCacheErrors {
             switch error {
             case .parsingError:
@@ -94,18 +105,18 @@ class HomeViewModel: HomeViewModelProtocol {
     func changeVisibility(to state: TaskVisibility) {
         stateVisibility = state
     }
-        
-    func deleteItem(at index: Int) {
-        fileCache.delete(with: items[index].id
-)
-        fileCache.remove(items.remove(at: index).id)
-        saveData()
-    }
     
     // MARK: - Enums
 
     enum TaskVisibility: String {
         case showCompleted
         case hideCompleted
+    }
+    
+    enum OperationType {
+        case insert(TodoItem)
+        case update(TodoItem)
+        case delete(String)
+        case save
     }
 }

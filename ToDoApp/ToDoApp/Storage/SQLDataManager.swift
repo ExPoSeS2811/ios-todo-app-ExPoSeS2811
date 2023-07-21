@@ -19,9 +19,9 @@ final class SQLDataManager: StorageManager {
     private let createdAt = Expression<Date>("created_at")
     private let changedAt = Expression<Date?>("changed_at")
     private let textColor = Expression<String?>("color")
-    
+
     let fileCache: FileCache
-    
+
     init(fileCache: FileCache) {
         self.fileCache = fileCache
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
@@ -114,6 +114,8 @@ final class SQLDataManager: StorageManager {
     }
 
     func delete(with id: String) {
+        fileCache.tasks[id] = nil
+
         let targetTask = todoItems.filter(self.id == id)
         let delete = targetTask.delete()
         do {
